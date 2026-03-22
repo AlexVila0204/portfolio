@@ -32,6 +32,7 @@ interface FolderItem {
   name: string;
   color: string;
   label: string;
+  section: string;
   isFile?: boolean;
 }
 
@@ -124,12 +125,12 @@ export default function EntrancePage() {
   };
 
   const folders: FolderItem[] = [
-    { name: "Plugins", color: "#e8a035", label: "Spigot / Paper plugins" },
-    { name: "Server Projects", color: "#4a9fb5", label: "Networks & servers" },
-    { name: "Systems", color: "#6a8ad0", label: "APIs & frameworks" },
-    { name: "Experiments", color: "#9b6ab5", label: "R&D prototypes" },
-    { name: "Feedback", color: "#5ba06a", label: "Community reviews" },
-    { name: "README.dev", color: "#8a8a70", label: "About the developer", isFile: true },
+    { name: "Projects", color: "#e8a035", label: "Open source & university", section: "plugins" },
+    { name: "Servers", color: "#4a9fb5", label: "Minecraft networks", section: "servers" },
+    { name: "Stack", color: "#6a8ad0", label: "Skills & technologies", section: "skills" },
+    { name: "Featured In", color: "#9b6ab5", label: "YouTube & media", section: "featured" },
+    { name: "About", color: "#5ba06a", label: "Background & experience", section: "about" },
+    { name: "Contact.md", color: "#8a8a70", label: "Get in touch", section: "contact", isFile: true },
   ];
 
   return (
@@ -173,10 +174,10 @@ export default function EntrancePage() {
           </div>
 
           <div className="flex-1 flex items-center justify-center py-10 px-4 lg:px-0">
-            <div className="w-full max-w-[720px]" style={{ transform: `translate(${mousePos.x * -3}px, ${mousePos.y * -2}px)`, transition: 'transform 0.2s ease-out' }}>
+            <div className="w-full max-w-[820px]" style={{ transform: `translate(${mousePos.x * -3}px, ${mousePos.y * -2}px)`, transition: 'transform 0.2s ease-out' }}>
               <AnimatePresence>
                 {!bootComplete && (
-                  <motion.div exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.4 }} className="font-mono text-[11px] text-slate-500 space-y-1 mb-4">
+                  <motion.div exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.4 }} className="font-mono text-[12px] text-slate-500 space-y-1 mb-4">
                     {bootLines.map((line, i) => (
                       <motion.div key={i} initial={{ opacity: 0, x: -5 }} animate={{ opacity: 1, x: 0 }} className={line?.includes('OK') ? 'text-[#5a8a5a]' : line?.includes('ready') ? 'text-[#6a9ad0]' : ''}>{line}</motion.div>
                     ))}
@@ -193,65 +194,66 @@ export default function EntrancePage() {
                     <div className="px-3 py-[6px] flex items-center justify-between" style={{ background: 'linear-gradient(180deg, #284a75 0%, #1d3860 50%, #1a3358 70%, #1e3a5f 100%)', borderBottom: '1px solid rgba(0,0,0,0.4)' }}>
                       <div className="flex items-center gap-2">
                         <svg width="14" height="12" viewBox="0 0 14 12" fill="none"><rect x="1" y="3" width="12" height="9" fill="#d4a030" opacity={0.6} /><path d="M1 3h5l2-2h5v1H8L6 4H1z" fill="#e8b840" opacity={0.5} /></svg>
-                        <span className="text-white/85 text-[11px]" style={{ fontFamily: 'Tahoma, sans-serif', textShadow: '1px 1px 2px rgba(0,0,0,0.6)' }}>Developer Workspace — Plugin Projects</span>
+                        <span className="text-white/85 text-[13px]" style={{ fontFamily: 'Tahoma, sans-serif', textShadow: '1px 1px 2px rgba(0,0,0,0.6)' }}>Developer Workspace — Plugin Projects</span>
                       </div>
                       <div className="flex items-center gap-[2px]">
                         {(['—', '□', '✕'] as const).map((sym, i) => (
-                          <button key={i} className="w-[20px] h-[20px] flex items-center justify-center rounded-[2px]" style={{ background: i === 2 ? 'linear-gradient(180deg, #c04848 0%, #982e2e 100%)' : 'linear-gradient(180deg, #3a6da0 0%, #2a5080 100%)', border: '1px solid rgba(0,0,0,0.3)', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.12)' }}>
+                          <button key={i} className="w-[22px] h-[22px] flex items-center justify-center rounded-[2px]" style={{ background: i === 2 ? 'linear-gradient(180deg, #c04848 0%, #982e2e 100%)' : 'linear-gradient(180deg, #3a6da0 0%, #2a5080 100%)', border: '1px solid rgba(0,0,0,0.3)', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.12)' }}>
                             <span className="text-white/90 text-[8px]">{sym}</span>
                           </button>
                         ))}
                       </div>
                     </div>
                     {/* Toolbar */}
-                    <div className="px-3 py-1.5 flex items-center gap-4 text-[10px] font-mono text-slate-600" style={{ background: 'linear-gradient(180deg, #1c1f26 0%, #181b21 100%)', borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
+                    <div className="px-3 py-1.5 flex items-center gap-4 text-[11px] font-mono text-slate-600" style={{ background: 'linear-gradient(180deg, #1c1f26 0%, #181b21 100%)', borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
                       {['File', 'Edit', 'View', 'Tools', 'Help'].map(l => <span key={l} className="hover:text-slate-400 cursor-default transition-colors">{l}</span>)}
                     </div>
                     {/* Address bar */}
                     <div className="px-3 py-2 flex items-center gap-2" style={{ background: 'linear-gradient(180deg, #1a1d24 0%, #16191f 100%)', borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
-                      <span className="text-[9px] text-slate-600 font-mono shrink-0 tracking-wider">PATH</span>
-                      <div className="flex-1 flex items-center px-2 py-[4px] font-mono text-[11px]" style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.04)', borderTop: '1px solid rgba(0,0,0,0.4)' }}>
+                      <span className="text-[10px] text-slate-600 font-mono shrink-0 tracking-wider">PATH</span>
+                      <div className="flex-1 flex items-center px-2 py-[5px] font-mono text-[12px]" style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.04)', borderTop: '1px solid rgba(0,0,0,0.4)' }}>
                         <span className="text-slate-600">~/dev/</span><span className="text-[#6aaa6a]">workspace</span><span className="text-slate-700">/</span><span className="text-[#d0a040]">plugins</span><span className="text-slate-700">/</span>
                         <motion.span className="text-slate-600" animate={{ opacity: [1, 0] }} transition={{ repeat: Infinity, duration: 0.8 }}>▌</motion.span>
                       </div>
                     </div>
                     {/* Side panel + content */}
-                    <div className="flex" style={{ minHeight: 360 }}>
-                      <div className="hidden sm:block w-[160px] shrink-0 py-4 px-3 font-mono text-[10px]" style={{ borderRight: '1px solid rgba(255,255,255,0.03)', background: 'rgba(0,0,0,0.1)' }}>
-                        <div className="text-slate-600 mb-2 tracking-wider text-[8px]">EXPLORER</div>
+                    <div className="flex" style={{ minHeight: 420 }}>
+                      <div className="hidden sm:block w-[175px] shrink-0 py-4 px-3 font-mono text-[11px]" style={{ borderRight: '1px solid rgba(255,255,255,0.03)', background: 'rgba(0,0,0,0.1)' }}>
+                        <div className="text-slate-600 mb-2 tracking-wider text-[9px]">EXPLORER</div>
                         <div className="space-y-[3px] text-slate-600">
                           <div className="text-[#6aaa6a]">▾ workspace</div>
-                          <div className="pl-3 text-[#d0a040]">▾ plugins</div>
+                          <div className="pl-3 text-[#d0a040]">▾ projects</div>
                           <div className="pl-6 text-slate-500">├── src/</div>
                           <div className="pl-6 text-slate-500">├── pom.xml</div>
                           <div className="pl-6 text-slate-500">└── config/</div>
                           <div className="pl-3 text-slate-600">▸ servers</div>
-                          <div className="pl-3 text-slate-600">▸ systems</div>
-                          <div className="pl-3 text-slate-600">▸ experiments</div>
+                          <div className="pl-3 text-slate-600">▸ stack</div>
+                          <div className="pl-3 text-slate-600">▸ featured</div>
+                          <div className="pl-3 text-slate-600">▸ about</div>
                           <div className="pl-3 text-slate-700">▸ .git</div>
                         </div>
                         <div className="mt-6 pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.03)' }}>
-                          <div className="text-[8px] text-slate-700 tracking-wider mb-2">STATS</div>
-                          <div className="space-y-1 text-[9px]">
+                          <div className="text-[9px] text-slate-700 tracking-wider mb-2">STATS</div>
+                          <div className="space-y-1 text-[10px]">
                             <div className="flex justify-between"><span className="text-slate-700">Plugins</span><span className="text-[#d0a040]">20+</span></div>
                             <div className="flex justify-between"><span className="text-slate-700">Servers</span><span className="text-[#4a9fb5]">2+</span></div>
                             <div className="flex justify-between"><span className="text-slate-700">Projects</span><span className="text-[#5ba06a]">15+</span></div>
                           </div>
                         </div>
                       </div>
-                      <div className="flex-1 p-5">
+                      <div className="flex-1 p-6">
                         <div className="grid grid-cols-3 gap-x-2 gap-y-0">
                           {folders.map((folder, i) => {
                             const isHovered = hoveredFolder === folder.name;
                             return (
                               <motion.div key={folder.name} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 + i * 0.08, duration: 0.4 }}>
-                                <div className="flex flex-col items-center py-3 px-1 cursor-pointer" onMouseEnter={() => setHoveredFolder(folder.name)} onMouseLeave={() => setHoveredFolder(null)} style={{ background: isHovered ? 'rgba(50,80,120,0.08)' : 'transparent', border: isHovered ? '1px solid rgba(70,100,150,0.12)' : '1px solid transparent', transition: 'all 0.12s ease' }}>
+                                <div className="flex flex-col items-center py-3 px-1 cursor-pointer" onMouseEnter={() => setHoveredFolder(folder.name)} onMouseLeave={() => setHoveredFolder(null)} onClick={() => { setIsEntering(true); setTimeout(() => router.push(`/portfolio#${folder.section}`), 700); }} style={{ background: isHovered ? 'rgba(50,80,120,0.08)' : 'transparent', border: isHovered ? '1px solid rgba(70,100,150,0.12)' : '1px solid transparent', transition: 'all 0.12s ease' }}>
                                   <motion.div animate={isHovered ? { y: -1.5 } : { y: 0 }} transition={{ duration: 0.15 }}>
                                     {folder.isFile ? <FileIcon hovered={isHovered} /> : <FolderIcon color={folder.color} hovered={isHovered} />}
                                   </motion.div>
-                                  <span className="text-[10px] mt-0.5 text-center leading-tight" style={{ color: isHovered ? '#a0b8d0' : '#555e6a', fontFamily: 'Tahoma, sans-serif', transition: 'color 0.12s ease' }}>{folder.name}</span>
+                                  <span className="text-[11px] mt-1 text-center leading-tight" style={{ color: isHovered ? '#a0b8d0' : '#555e6a', fontFamily: 'Tahoma, sans-serif', transition: 'color 0.12s ease' }}>{folder.name}</span>
                                   <AnimatePresence>
-                                    {isHovered && <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-[8px] text-slate-700 font-mono mt-0.5">{folder.label}</motion.span>}
+                                    {isHovered && <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-[9px] text-slate-700 font-mono mt-0.5">{folder.label}</motion.span>}
                                   </AnimatePresence>
                                 </div>
                               </motion.div>
@@ -260,25 +262,25 @@ export default function EntrancePage() {
                         </div>
                         <div className="mt-6 mb-4 flex items-center gap-2">
                           <div className="h-px flex-1" style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.04), rgba(255,255,255,0.05), transparent)' }} />
-                          <span className="text-[8px] font-mono text-slate-700 tracking-[0.2em]">LAUNCH</span>
+                          <span className="text-[9px] font-mono text-slate-700 tracking-[0.2em]">LAUNCH</span>
                           <div className="h-px w-8" style={{ background: 'linear-gradient(90deg, rgba(255,255,255,0.04), transparent)' }} />
                         </div>
-                        <motion.button initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8, duration: 0.5 }} onClick={handleEnter} className="group w-full py-2.5 cursor-pointer" style={{ background: 'linear-gradient(180deg, rgba(25,50,75,0.35) 0%, rgba(20,40,65,0.25) 100%)', border: '1px solid rgba(50,90,140,0.18)', transition: 'all 0.15s ease' }} onMouseEnter={(e) => { e.currentTarget.style.background = 'linear-gradient(180deg, rgba(30,60,90,0.45) 0%, rgba(25,50,80,0.35) 100%)'; e.currentTarget.style.borderColor = 'rgba(60,110,170,0.25)'; }} onMouseLeave={(e) => { e.currentTarget.style.background = 'linear-gradient(180deg, rgba(25,50,75,0.35) 0%, rgba(20,40,65,0.25) 100%)'; e.currentTarget.style.borderColor = 'rgba(50,90,140,0.18)'; }}>
+                        <motion.button initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8, duration: 0.5 }} onClick={handleEnter} className="group w-full py-3 cursor-pointer" style={{ background: 'linear-gradient(180deg, rgba(25,50,75,0.35) 0%, rgba(20,40,65,0.25) 100%)', border: '1px solid rgba(50,90,140,0.18)', transition: 'all 0.15s ease' }} onMouseEnter={(e) => { e.currentTarget.style.background = 'linear-gradient(180deg, rgba(30,60,90,0.45) 0%, rgba(25,50,80,0.35) 100%)'; e.currentTarget.style.borderColor = 'rgba(60,110,170,0.25)'; }} onMouseLeave={(e) => { e.currentTarget.style.background = 'linear-gradient(180deg, rgba(25,50,75,0.35) 0%, rgba(20,40,65,0.25) 100%)'; e.currentTarget.style.borderColor = 'rgba(50,90,140,0.18)'; }}>
                           <div className="flex items-center justify-center gap-3">
-                            <span className="text-[11px] font-mono text-slate-500 group-hover:text-slate-300 transition-colors">▸ Open Developer Portfolio</span>
-                            <motion.span className="text-[9px] font-mono text-slate-700" animate={{ opacity: [0.3, 0.6, 0.3] }} transition={{ repeat: Infinity, duration: 2 }}>[ENTER]</motion.span>
+                            <span className="text-[13px] font-mono text-slate-500 group-hover:text-slate-300 transition-colors">▸ Open Developer Portfolio</span>
+                            <motion.span className="text-[10px] font-mono text-slate-700" animate={{ opacity: [0.3, 0.6, 0.3] }} transition={{ repeat: Infinity, duration: 2 }}>[ENTER]</motion.span>
                           </div>
                         </motion.button>
                       </div>
                     </div>
                     {/* Status bar */}
                     <div className="px-3 py-[4px] flex items-center justify-between" style={{ background: 'rgba(0,0,0,0.2)', borderTop: '1px solid rgba(255,255,255,0.025)' }}>
-                      <div className="flex items-center gap-2 font-mono text-[9px] text-slate-600 min-h-[13px]">
-                        <div className="w-[4px] h-[4px]" style={{ background: '#4a7a4a', boxShadow: '0 0 5px rgba(74,122,74,0.4)' }} />
+                      <div className="flex items-center gap-2 font-mono text-[10px] text-slate-600 min-h-[14px]">
+                        <div className="w-[5px] h-[5px]" style={{ background: '#4a7a4a', boxShadow: '0 0 5px rgba(74,122,74,0.4)' }} />
                         <span>{displayedText}</span>
                         <motion.span animate={{ opacity: [1, 0] }} transition={{ repeat: Infinity, duration: 0.5 }} className="text-slate-600">_</motion.span>
                       </div>
-                      <div className="flex items-center gap-3 font-mono text-[9px] text-slate-700">
+                      <div className="flex items-center gap-3 font-mono text-[10px] text-slate-700">
                         <span>6 modules</span><span className="text-slate-800">|</span><span>Java 21</span><span className="text-slate-800">|</span><span>{mounted ? time : '--:--:--'}</span>
                       </div>
                     </div>

@@ -13,8 +13,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Retro Minecraft Developer Portfolio",
+  title: "AlexVila Portfolio",
   description: "Minecraft plugin developer portfolio — plugins, server systems, and developer tools.",
+  icons: {
+    icon: '/own-profile.jpg',
+  },
 };
 
 export default function RootLayout({

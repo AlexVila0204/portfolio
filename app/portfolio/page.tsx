@@ -10,7 +10,7 @@ import {
 import Image from 'next/image';
 
 type ProjectMedia = { src: string; caption: string };
-type Project = { name: string; description: string; tags: string[]; status: string; lang: string; href: string; devNote?: string; media?: ProjectMedia[] };
+type Project = { name: string; description: string; tags: string[]; status: string; lang: string; href: string; devNote?: string; media?: ProjectMedia[]; wiki?: string };
 
 const projects: Project[] = [
   {
@@ -25,6 +25,15 @@ const projects: Project[] = [
       { src: "/showcase_recipediscover/materials_recipe_list.png", caption: "Dynamic Material Progression System" },
       { src: "/showcase_recipediscover/research_material.gif", caption: "Asynchronous Material Research" }
     ]
+  },
+  {
+    name: "Transport-Pipes (Maintainer)",
+    description: "A highly complex logistics plugin adding functional pipes for automated item transport, sorting, and crafting. Features include advanced routing algorithms, GUI-based filtering, container extraction logic, and dynamic block obfuscation for performance scaling.",
+    tags: ["Java", "Spigot API", "Algorithms", "Automation"],
+    status: "stable",
+    lang: "Java",
+    href: "https://github.com/AlexVila0204/Transport-Pipes",
+    wiki: "https://alexvila0204.github.io/Transport-Pipes/"
   },
   { name: "Virtual Memory Simulator", description: "Advanced virtual memory management simulator with 5 page replacement algorithms (FIFO, LRU, LFU, CLOCK, OPT) and complete statistical analysis.", tags: ["Python", "OS", "Algorithms", "Simulation"], status: "stable", lang: "Python", href: "https://github.com/AlexVila0204/Sistemas_operativos_II-Proyecto_Virtual-Mem-Sim" },
   { name: "Redmine Ticket System", description: "Ticket management system with Redmine integration, REST API and web frontend for submitting and managing requests.", tags: ["JavaScript", "REST API", "Redmine", "Full Stack"], status: "stable", lang: "JavaScript", href: "https://github.com/AlexVila0204/redmine-ticket-system_gobernabilidad" },
@@ -190,8 +199,11 @@ export default function PortfolioPage() {
                   <div className="flex flex-wrap gap-2 mb-5">
                     {project.tags.map((tag) => <span key={tag} className="font-mono text-[11px] px-2 py-1 text-slate-500 rounded" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }}>{tag}</span>)}
                   </div>
-                  <div className="flex items-center font-mono text-xs text-slate-500">
-                    <a href={project.href} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 ml-auto text-slate-600 hover:text-slate-400 transition-colors cursor-pointer">Source code <ArrowUpRight className="w-3 h-3" /></a>
+                  <div className="flex items-center justify-end gap-5 mt-1 font-mono text-xs text-slate-500">
+                    {project.wiki && (
+                      <a href={project.wiki} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-slate-500 hover:text-[#5ba06a] transition-colors cursor-pointer"><ExternalLink className="w-3.5 h-3.5" /> Docs / Wiki</a>
+                    )}
+                    <a href={project.href} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-slate-600 hover:text-slate-400 transition-colors cursor-pointer"><ArrowUpRight className="w-3.5 h-3.5" /> Source code</a>
                   </div>
                 </div>
               </motion.div>

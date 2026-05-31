@@ -820,10 +820,12 @@ export default function AlexOSPage() {
   /* ---------- shutdown sequence ---------- */
   useEffect(() => {
     if (shutdownPhase === 1) {
+      new Audio("/sounds/shutdown-xp.mp3").play().catch(console.error);
       let count = 0;
       setCascadeErrors([]);
       const int = setInterval(() => {
         count++;
+        new Audio("/sounds/xp-error.mp3").play().catch(console.error);
         setCascadeErrors((p) => [...p, {
           id: count,
           left: window.innerWidth / 2 - 150 + (count * 18) % 250 - 125,
@@ -840,7 +842,10 @@ export default function AlexOSPage() {
 
   useEffect(() => {
     if (shutdownPhase === 2) {
-      const t = setTimeout(() => setShutdownPhase(3), 2500);
+      const t = setTimeout(() => {
+        setShutdownPhase(3);
+        new Audio("/sounds/blue-screen-of-death.mp3").play().catch(console.error);
+      }, 2500);
       return () => clearTimeout(t);
     }
   }, [shutdownPhase]);
@@ -919,6 +924,7 @@ export default function AlexOSPage() {
   function finishBoot() {
     if (bootDoneRef.current) return;
     bootDoneRef.current = true;
+    new Audio("/sounds/win95-startup.ogv").play().catch(console.error);
     setBiosFading(true);
     setTimeout(() => {
       setBiosVisible(false);

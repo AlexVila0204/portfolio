@@ -1,22 +1,19 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const jetbrains = JetBrains_Mono({
+  variable: "--font-term",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: ["400", "500", "700"],
 });
 
 export const metadata: Metadata = {
-  title: "AlexVila Portfolio",
-  description: "Minecraft plugin developer portfolio — plugins, server systems, and developer tools.",
+  title: "AlexOS — Terminal Portfolio",
+  description:
+    "Alberth Alexander Godoy Avila — Backend developer & Minecraft plugin developer. Windows 95-themed terminal portfolio.",
   icons: {
-    icon: '/own-profile.jpg',
+    icon: "/own-profile.jpg",
   },
 };
 
@@ -26,11 +23,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col" style={{ background: '#090b0e' }}>{children}</body>
+    <html lang="en" className={jetbrains.variable}>
+      <body suppressHydrationWarning>{children}</body>
     </html>
   );
 }

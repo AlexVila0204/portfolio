@@ -1,308 +1,1475 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
-import { motion, AnimatePresence } from 'motion/react';
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  type ReactNode,
+  type KeyboardEvent as ReactKeyboardEvent,
+  type MouseEvent as ReactMouseEvent,
+} from "react";
 
-function FolderIcon({ color, hovered }: { color: string; hovered: boolean }) {
+/* ============================================================
+   DATA — portfolio content
+   ============================================================ */
+const PORTFOLIO = {
+  user: {
+    handle: "alexvila04",
+    host: "portfolio",
+    name: "Alberth Alexander Godoy Avila",
+    title: "Backend Dev & Minecraft Plugin Developer",
+    location: "Honduras",
+    school: "UNITEC — Systems Engineering",
+    shell: "/bin/bash",
+  },
+
+  banner: [
+    " █████╗ ██╗     ███████╗██╗  ██╗   ██╗   ██╗██╗██╗      █████╗  ██████╗ ██╗  ██╗",
+    "██╔══██╗██║     ██╔════╝╚██╗██╔╝   ██║   ██║██║██║     ██╔══██╗██╔═████╗██║  ██║",
+    "███████║██║     █████╗   ╚███╔╝    ██║   ██║██║██║     ███████║██║██╔██║███████║",
+    "██╔══██║██║     ██╔══╝   ██╔██╗    ╚██╗ ██╔╝██║██║     ██╔══██║████╔╝██║╚════██║",
+    "██║  ██║███████╗███████╗██╔╝ ██╗    ╚████╔╝ ██║███████╗██║  ██║╚██████╔╝     ██║",
+    "╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝     ╚═══╝  ╚═╝╚══════╝╚═╝  ╚═╝ ╚═════╝      ╚═╝",
+  ],
+
+  logo: [
+    "        ▄▄▄▄▄▄▄▄▄▄▄▄        ",
+    "      ▟████████████▙      ",
+    "    ▟████▛▀▀▀▀▀▀████▙    ",
+    "   ▐███▛  ▄▄  ▄▄  ▜███▌   ",
+    "   ▐███▌ ▐██▌▐██▌ ▟███▌   ",
+    "   ▐███▙  ▀▀▄▄▀▀  ▟███▌   ",
+    "    ▜████▄ ▐██▌ ▄████▛    ",
+    "      ▜███████████████▛      ",
+    "        ▀▀▀▀▀▀▀▀▀▀▀▀        ",
+  ],
+
+  stats: [
+    { label: "Plugins", value: "20+" },
+    { label: "Servers", value: "2+" },
+    { label: "Projects", value: "15+" },
+  ],
+
+  intro: [
+    "Systems Engineering student with hands-on experience in backend",
+    "development and server administration. I build Minecraft plugins,",
+    "design authentication systems, and optimize server performance.",
+    "Passionate about clean architecture, security, and scalable solutions.",
+  ],
+
+  projects: [
+    {
+      name: "HGN-RecipeDiscovery",
+      tag: "Client Work",
+      lang: "Kotlin",
+      status: "stable",
+      stack: ["Kotlin", "Paper API", "Async Tasks", "Custom GUI"],
+      desc: "A complex Minecraft progression plugin where players cannot craft custom items until they physically research and unlock the required materials. Features 8 dynamic GUIs, async time management, and full integration with third-party custom item frameworks.",
+      links: [] as { label: string; url: string }[],
+    },
+    {
+      name: "Transport-Pipes",
+      tag: "Maintainer",
+      lang: "Java",
+      status: "stable",
+      stack: ["Java", "Spigot API", "Algorithms", "Automation"],
+      desc: "A highly complex logistics plugin adding functional pipes for automated item transport, sorting, and crafting. Advanced routing algorithms, GUI-based filtering, container extraction logic, and dynamic block obfuscation for performance scaling.",
+      links: [
+        { label: "source", url: "https://github.com/AlexVila0204/Transport-Pipes" },
+        { label: "wiki", url: "https://alexvila0204.github.io/Transport-Pipes/" },
+      ],
+    },
+    {
+      name: "Virtual Memory Simulator",
+      tag: "University",
+      lang: "Python",
+      status: "stable",
+      stack: ["Python", "OS", "Algorithms", "Simulation"],
+      desc: "Advanced virtual memory management simulator with 5 page replacement algorithms (FIFO, LRU, LFU, CLOCK, OPT) and complete statistical analysis.",
+      links: [{ label: "source", url: "https://github.com/AlexVila0204/Sistemas_operativos_II-Proyecto_Virtual-Mem-Sim" }],
+    },
+    {
+      name: "Redmine Ticket System",
+      tag: "Full Stack",
+      lang: "JavaScript",
+      status: "stable",
+      stack: ["JavaScript", "REST API", "Redmine", "Full Stack"],
+      desc: "Ticket management system with Redmine integration, REST API and web frontend for submitting and managing requests.",
+      links: [{ label: "source", url: "https://github.com/AlexVila0204/redmine-ticket-system_gobernabilidad" }],
+    },
+    {
+      name: "Parking Control System",
+      tag: "Backend",
+      lang: "JavaScript",
+      status: "stable",
+      stack: ["JavaScript", "CRUD", "Backend"],
+      desc: "CRUD-based parking management system for vehicle entry/exit tracking and space management.",
+      links: [{ label: "source", url: "https://github.com/AlexVila0204/parking-control-system" }],
+    },
+    {
+      name: "SpeedRunParkour",
+      tag: "SolrynMC",
+      lang: "Kotlin",
+      status: "stable",
+      stack: ["Kotlin", "Spigot", "Minecraft", "Events"],
+      desc: "Minecraft parkour speedrun event plugin built for SolrynMC. Timed runs, checkpoints, and leaderboards.",
+      links: [{ label: "source", url: "https://github.com/AlexVila0204/SpeedRunParkour" }],
+    },
+    {
+      name: "SolrynLifesteal Addon",
+      tag: "SolrynMC",
+      lang: "Kotlin",
+      status: "stable",
+      stack: ["Kotlin", "Spigot", "Lifesteal", "Addon"],
+      desc: "Lifesteal core addon plugin for SolrynMC server, extending gameplay mechanics with custom heart systems.",
+      links: [{ label: "source", url: "https://github.com/AlexVila0204/SolrynLifestealCore_addon" }],
+    },
+    {
+      name: "BoatRace",
+      tag: "SolrynMC",
+      lang: "Kotlin",
+      status: "stable",
+      stack: ["Kotlin", "Spigot", "Minecraft", "Minigame"],
+      desc: "Minecraft boat racing event plugin for SolrynMC. Custom race tracks, timing system, and competitive race events.",
+      links: [{ label: "source", url: "https://github.com/AlexVila0204/BoatRace" }],
+    },
+  ],
+
+  servers: [
+    {
+      name: "EternalMC",
+      role: "Owner & Developer",
+      meta: "Active",
+      desc: "Full server development and maintenance. Building custom plugins, managing infrastructure, and handling all technical operations as owner.",
+    },
+    {
+      name: "SolrynMC",
+      role: "Plugin Developer",
+      meta: "4 months",
+      desc: "Developed and maintained custom plugins, configured server systems, and created new plugins as needed to support gameplay features.",
+    },
+  ],
+
+  skills: [
+    { name: "Java", level: 92 },
+    { name: "Python", level: 80 },
+    { name: "C++", level: 70 },
+    { name: "PHP", level: 65 },
+    { name: "MySQL / PostgreSQL", level: 85 },
+    { name: "MongoDB", level: 72 },
+    { name: "Git / GitHub", level: 90 },
+    { name: "Linux / Server Admin", level: 82 },
+    { name: "Spigot / Paper API", level: 88 },
+    { name: "Backend & APIs", level: 85 },
+  ],
+
+  about: [
+    "Systems Engineering student at UNITEC, Honduras. Currently a software",
+    "developer intern at Red Abierta. Previously backend developer at Marketing",
+    "Total building authentication systems. Freelancer on Fiverr developing",
+    "Minecraft plugins and managing server deployments.",
+    "",
+    "I focus on system optimization, security, and scalability. From Java plugins",
+    "to backend APIs, I build things that are reliable, performant, and well-documented.",
+    "",
+    "Certified in Cisco CCNA: Networking, with additional training in innovation",
+    "(ASU) and advanced mathematics (UC San Diego).",
+  ],
+
+  aboutComment: "// Code should be read by humans, not just compilers.",
+
+  featured: {
+    source: "Spizee Gaming",
+    desc: "My first Minecraft plugin was featured in a YouTube video by Spizee Gaming, showcasing the plugin in action on their server.",
+    url: "https://www.youtube.com/watch?v=0s_i8Nhsvag&t=43s",
+  },
+
+  contact: [
+    { label: "GitHub", value: "github.com/AlexVila0204", url: "https://github.com/AlexVila0204" },
+    {
+      label: "LinkedIn",
+      value: "linkedin.com/in/alberth-alexander-godoy-avila",
+      url: "https://www.linkedin.com/in/alberth-alexander-godoy-avila-91509b334/",
+    },
+    { label: "Email", value: "vilatrix.codecrafter@gmail.com", url: "mailto:vilatrix.codecrafter@gmail.com" },
+    { label: "Discord", value: "available on request", url: "#" },
+  ],
+
+  boot: [
+    { t: "AlexOS BIOS v1.0.4 — (C) 2026 AlexVila04 Systems", cls: "dim" },
+    { t: "", cls: "" },
+    { t: "Performing POST ...", cls: "" },
+    { t: "CPU0: Apple M-class @ 3.50GHz ............ [ OK ]", cls: "ok" },
+    { t: "Memory test: 16384 MB ................... [ OK ]", cls: "ok" },
+    { t: "Detecting storage devices .............. [ OK ]", cls: "ok" },
+    { t: "", cls: "" },
+    { t: "Initializing developer environment...", cls: "" },
+    { t: "Loading JDK 21 runtime ................. [ OK ]", cls: "ok" },
+    { t: "Mounting plugin workspace .............. [ OK ]", cls: "ok" },
+    { t: "Scanning Maven repositories ............ [ OK ]", cls: "ok" },
+    { t: "Resolving Spigot API 1.21.4 ............ [ OK ]", cls: "ok" },
+    { t: "Indexing project modules ............... 8 found", cls: "warn" },
+    { t: "Starting window manager (alexwm) ....... [ OK ]", cls: "ok" },
+    { t: "", cls: "" },
+    { t: "Environment ready. Booting AlexOS desktop", cls: "boot" },
+  ],
+};
+
+/* ============================================================
+   PHOSPHOR PALETTES & TWEAKS
+   ============================================================ */
+const PHOSPHORS: Record<string, { name: string; phosphor: string; bright: string; dim: string; faint: string; term: string }> = {
+  "#33ff66": { name: "green", phosphor: "#33ff66", bright: "#b6ffcb", dim: "#1f9c42", faint: "#0e4d22", term: "#04130a" },
+  "#ffb000": { name: "amber", phosphor: "#ffb000", bright: "#ffe39e", dim: "#b87400", faint: "#3d2700", term: "#140d02" },
+  "#45e0ff": { name: "cyan", phosphor: "#45e0ff", bright: "#c4f6ff", dim: "#1f8aa0", faint: "#07343d", term: "#02121a" },
+  "#e6f0e6": { name: "mono", phosphor: "#e6f0e6", bright: "#ffffff", dim: "#9aa79a", faint: "#3a423a", term: "#0a0c0a" },
+};
+const BG_OPTIONS: Record<string, string> = { teal: "#11806f", black: "#05080a" };
+
+function applyTweaks(phosphor: string, background: string, intensity: number) {
+  const root = document.documentElement.style;
+  const pal = PHOSPHORS[phosphor] || PHOSPHORS["#33ff66"];
+  root.setProperty("--phosphor", pal.phosphor);
+  root.setProperty("--phosphor-bright", pal.bright);
+  root.setProperty("--phosphor-dim", pal.dim);
+  root.setProperty("--phosphor-faint", pal.faint);
+  root.setProperty("--term-bg", pal.term);
+  root.setProperty("--desk-bg", BG_OPTIONS[background] || BG_OPTIONS.teal);
+  const i = Math.max(0, Math.min(100, intensity)) / 100;
+  root.setProperty("--scan-opacity", (i * 0.4).toFixed(3));
+  root.setProperty("--glow", (i * 1.35 + 0.05).toFixed(3));
+}
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+function esc(s: string): string {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function truncate(s: string, n: number): string {
+  return s.length > n ? s.slice(0, n - 1) + "…" : s;
+}
+
+function wrap(text: string, width: number): string[] {
+  const words = text.split(" ");
+  const lines: string[] = [];
+  let cur = "";
+  words.forEach((w) => {
+    if ((cur + " " + w).trim().length > width) {
+      lines.push(cur.trim());
+      cur = w;
+    } else cur += " " + w;
+  });
+  if (cur.trim()) lines.push(cur.trim());
+  return lines;
+}
+
+function barHtml(level: number, width = 22): string {
+  const filled = Math.round((level / 100) * width);
+  return `<span class="bar">${"█".repeat(filled)}</span><span class="barbg">${"░".repeat(width - filled)}</span>`;
+}
+
+function linkSpan(text: string, url: string): string {
+  if (!url || url === "#") return `<span class="lnk" data-url="#">${esc(text)}</span>`;
+  return `<span class="lnk" data-url="${esc(url)}">${esc(text)}</span>`;
+}
+
+/* ============================================================
+   ICON SVGs (inline strings for React dangerouslySetInnerHTML)
+   ============================================================ */
+function iconFolder(c: string): string {
+  return `<svg width="34" height="30" viewBox="0 0 34 30"><path d="M2 6h10l3 3h17v18a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6z" fill="${c}" stroke="#000" stroke-width="1"/><path d="M2 6h10l3 3h17" fill="none" stroke="#000" stroke-width="1"/><rect x="2" y="9" width="30" height="2" fill="#000" opacity="0.15"/></svg>`;
+}
+function iconFile(): string {
+  return `<svg width="30" height="32" viewBox="0 0 30 32"><path d="M3 1h18l6 6v24H3z" fill="#fff" stroke="#000"/><path d="M21 1v6h6" fill="#ccc" stroke="#000"/><line x1="7" y1="13" x2="23" y2="13" stroke="#444"/><line x1="7" y1="17" x2="23" y2="17" stroke="#444"/><line x1="7" y1="21" x2="19" y2="21" stroke="#444"/></svg>`;
+}
+function iconTerminal(): string {
+  return `<svg width="32" height="28" viewBox="0 0 32 28"><rect x="1" y="1" width="30" height="26" fill="#000" stroke="#fff"/><rect x="1" y="1" width="30" height="5" fill="#0a2a8c"/><text x="4" y="18" font-family="monospace" font-size="11" fill="#33ff66">&gt;_</text></svg>`;
+}
+
+/* ============================================================
+   LINE MODEL — each piece of terminal output
+   ============================================================ */
+interface TermLine {
+  html: string;
+  cls: string;
+  key: number;
+  isProw?: boolean;
+  prowIdx?: number;
+}
+
+let lineKey = 0;
+function makeLine(html: string, cls = ""): TermLine {
+  return { html, cls: "line" + (cls ? " " + cls : ""), key: lineKey++ };
+}
+function makePreLine(html: string, cls = ""): TermLine {
+  return { html, cls: "line pre" + (cls ? " " + cls : ""), key: lineKey++ };
+}
+function blankLine(): TermLine {
+  return makeLine("&nbsp;");
+}
+
+/* ============================================================
+   COMMAND HANDLERS — return TermLine arrays
+   ============================================================ */
+const P = PORTFOLIO;
+const PROMPT = `${P.user.handle}@${P.user.host}:~$ `;
+
+function cmdHelp(): TermLine[] {
+  const out: TermLine[] = [];
+  out.push(makeLine(`<span class="head">AlexOS shell — available commands</span>`));
+  out.push(blankLine());
+  const rows: [string, string][] = [
+    ["help", "show this command list"],
+    ["about", "who I am & background"],
+    ["projects", "list all projects  (open <n> for details)"],
+    ["skills", "languages, APIs & tools"],
+    ["servers", "Minecraft networks I've run"],
+    ["featured", "where my work has been featured"],
+    ["contact", "find me online  (alias: social)"],
+    ["neofetch", "system + profile summary"],
+    ["whoami", "current user"],
+    ["ls", "list home directory"],
+    ["banner", "print the ALEXVILA04 banner"],
+    ["cowsay", "moo 🐄  (try: cowsay <message>)"],
+    ["theme", "open appearance settings (Tweaks)"],
+    ["clear", "clear the screen"],
+  ];
+  rows.forEach(([c, d]) => out.push(makeLine(`  <span class="nbr">${c.padEnd(10)}</span><span class="dim">${esc(d)}</span>`)));
+  out.push(blankLine());
+  out.push(makeLine(`<span class="dim">tip:</span> click the buttons below, the desktop icons, or just start typing.`));
+  return out;
+}
+
+function cmdWhoami(): TermLine[] {
+  return [
+    makeLine(`<span class="nbr">${P.user.handle}</span>`),
+    makeLine(`<span class="dim">${esc(P.user.name)} — ${esc(P.user.title)}</span>`),
+  ];
+}
+
+function cmdLs(): TermLine[] {
+  const files: [string, string][] = [
+    ["about.md", "f"], ["projects/", "d"], ["servers/", "d"], ["skills.cfg", "f"],
+    ["featured.log", "f"], ["contact.vcf", "f"], [".bashrc", "f"], ["README.txt", "f"],
+  ];
+  const line = files
+    .map(([f, t]) => (t === "d" ? `<span class="cyan">${f}</span>` : `<span class="nbr">${f}</span>`))
+    .join("   ");
+  return [makeLine(line)];
+}
+
+function cmdAbout(): TermLine[] {
+  const out: TermLine[] = [];
+  out.push(makeLine(`<span class="dim">~/</span><span class="head">about</span>`));
+  out.push(blankLine());
+  P.about.forEach((l) => {
+    if (l === "") out.push(blankLine());
+    else out.push(makeLine(`<span class="nbr">$</span> ${esc(l)}`));
+  });
+  out.push(blankLine());
+  out.push(makeLine(`<span class="faint">${esc(P.aboutComment)}</span>`));
+  out.push(blankLine());
+  out.push(makeLine(`<span class="dim">location:</span> ${esc(P.user.location)}   <span class="dim">school:</span> ${esc(P.user.school)}`));
+  return out;
+}
+
+function cmdProjects(): TermLine[] {
+  const out: TermLine[] = [];
+  out.push(
+    makeLine(
+      `<span class="head">projects</span> <span class="dim">— ${P.projects.length} indexed ·</span> <span class="nbr">click any row to open</span> <span class="dim">· or type</span> <span class="nbr">open &lt;n&gt;</span>`
+    )
+  );
+  out.push(blankLine());
+  P.projects.forEach((pr, i) => {
+    const n = String(i + 1).padStart(2, "0");
+    const line: TermLine = {
+      html:
+        `  <span class="amberhi">[${n}]</span> <span class="nbr">${esc(pr.name)}</span> <span class="dim">· ${esc(pr.tag)} · ${esc(pr.lang)}</span> <span class="opener">[ ▸ open ]</span>` +
+        `<br>      <span class="dim">${esc(truncate(pr.desc, 84))}</span>`,
+      cls: "line prow",
+      key: lineKey++,
+      isProw: true,
+      prowIdx: i + 1,
+    };
+    out.push(line);
+  });
+  out.push(blankLine());
+  out.push(
+    makeLine(
+      `<span class="dim">→ tip: click a project above, or type</span> <span class="nbr">open 1</span> <span class="dim">…</span> <span class="nbr">open ${P.projects.length}</span>`
+    )
+  );
+  return out;
+}
+
+function cmdOpen(arg: string): TermLine[] {
+  const idx = parseInt(arg, 10) - 1;
+  if (isNaN(idx) || idx < 0 || idx >= P.projects.length) {
+    return [
+      makeLine(
+        `<span class="err">open: no project #${esc(arg)}.</span> <span class="dim">use</span> <span class="nbr">projects</span> <span class="dim">to list (1–${P.projects.length}).</span>`
+      ),
+    ];
+  }
+  const pr = P.projects[idx];
+  const out: TermLine[] = [];
+  out.push(makeLine(`<span class="dim">┌─</span> <span class="head">${esc(pr.name)}</span> <span class="dim">───────────────────────────────</span>`));
+  out.push(makeLine(`<span class="dim">│</span>  <span class="amberhi">${esc(pr.tag)}</span> <span class="dim">·</span> <span class="cyan">${esc(pr.lang)}</span> <span class="dim">·</span> <span class="nbr">${esc(pr.status)}</span>`));
+  out.push(makeLine(`<span class="dim">│</span>`));
+  wrap(pr.desc, 78).forEach((l) => out.push(makeLine(`<span class="dim">│</span>  ${esc(l)}`)));
+  out.push(makeLine(`<span class="dim">│</span>`));
+  out.push(makeLine(`<span class="dim">│</span>  <span class="chip">${pr.stack.map((s) => `[${esc(s)}]`).join(" ")}</span>`));
+  if (pr.links && pr.links.length) {
+    out.push(makeLine(`<span class="dim">│</span>`));
+    pr.links.forEach((lk) =>
+      out.push(
+        makeLine(`<span class="dim">│</span>  <span class="dim">${lk.label}:</span> ${linkSpan(lk.url.replace(/^https?:\/\//, ""), lk.url)}`)
+      )
+    );
+  }
+  out.push(makeLine(`<span class="dim">└──────────────────────────────────────────────────</span>`));
+  return out;
+}
+
+function cmdSkills(): TermLine[] {
+  const out: TermLine[] = [];
+  out.push(makeLine(`<span class="head">tech stack</span> <span class="dim">— languages, APIs & tools</span>`));
+  out.push(blankLine());
+  const maxName = Math.max(...P.skills.map((s) => s.name.length));
+  P.skills.forEach((s) => {
+    out.push(makeLine(`  <span class="nbr">${esc(s.name.padEnd(maxName))}</span>  ${barHtml(s.level)} <span class="dim">${s.level}%</span>`));
+  });
+  return out;
+}
+
+function cmdServers(): TermLine[] {
+  const out: TermLine[] = [];
+  out.push(makeLine(`<span class="head">server projects</span> <span class="dim">— networks I've run & developed</span>`));
+  out.push(blankLine());
+  P.servers.forEach((sv) => {
+    out.push(makeLine(`  <span class="cyan">◈</span> <span class="nbr">${esc(sv.name)}</span> <span class="dim">— ${esc(sv.role)}</span> <span class="amberhi">(${esc(sv.meta)})</span>`));
+    wrap(sv.desc, 84).forEach((l) => out.push(makeLine(`     <span class="dim">${esc(l)}</span>`)));
+    out.push(blankLine());
+  });
+  return out;
+}
+
+function cmdFeatured(): TermLine[] {
+  const f = P.featured;
+  const out: TermLine[] = [];
+  out.push(makeLine(`<span class="head">featured in</span>`));
+  out.push(blankLine());
+  out.push(makeLine(`  <span class="err">▶</span> <span class="nbr">${esc(f.source)}</span> <span class="dim">· YouTube</span>`));
+  wrap(f.desc, 84).forEach((l) => out.push(makeLine(`     <span class="dim">${esc(l)}</span>`)));
+  out.push(makeLine(`     watch: ${linkSpan("youtube.com/watch?v=0s_i8Nhsvag", f.url)}`));
+  return out;
+}
+
+function cmdContact(): TermLine[] {
+  const out: TermLine[] = [];
+  out.push(makeLine(`<span class="head">contact</span> <span class="dim">— find me online</span>`));
+  out.push(blankLine());
+  const maxL = Math.max(...P.contact.map((c) => c.label.length));
+  P.contact.forEach((c) => {
+    out.push(
+      makeLine(
+        `  <span class="amberhi">${esc(c.label.padEnd(maxL))}</span>  ${
+          c.url === "#" ? `<span class="dim">${esc(c.value)}</span>` : linkSpan(c.value, c.url)
+        }`
+      )
+    );
+  });
+  return out;
+}
+
+function cmdBanner(): TermLine[] {
+  return P.banner.map((l) => makePreLine(esc(l), "banner"));
+}
+
+function cmdNeofetch(): TermLine[] {
+  const info: (string | null)[] = [
+    "",
+    `<span class="head">${P.user.handle}</span><span class="dim">@</span><span class="head">${P.user.host}</span>`,
+    `<span class="dim">─────────────────────────</span>`,
+    `<span class="amberhi">name</span>     ${esc(P.user.name)}`,
+    `<span class="amberhi">role</span>     ${esc(P.user.title)}`,
+    `<span class="amberhi">os</span>       AlexOS 95 (x86_64)`,
+    `<span class="amberhi">shell</span>    ${esc(P.user.shell)}`,
+    `<span class="amberhi">school</span>   ${esc(P.user.school)}`,
+    `<span class="amberhi">runtime</span>  JDK 21 · Spigot/Paper 1.21.4`,
+    `<span class="amberhi">uptime</span>   online — environment active`,
+    `<span class="amberhi">stats</span>    ${P.stats.map((s) => `${s.value} ${s.label.toLowerCase()}`).join(" · ")}`,
+    `<span class="dim">─────────────────────────</span>`,
+    `<span class="nbr">●</span> <span class="dim">type</span> <span class="nbr">help</span> <span class="dim">for commands</span>`,
+  ];
+  const logo = P.logo;
+  const rows = Math.max(logo.length, info.length);
+  const out: TermLine[] = [];
+  for (let i = 0; i < rows; i++) {
+    const L = logo[i] ? `<span class="logo">${esc(logo[i])}</span>` : " ".repeat(28);
+    const R = info[i] ?? "";
+    out.push(makePreLine(`${L}  ${R}`));
+  }
+  return out;
+}
+
+function cmdDate(): TermLine[] {
+  return [makeLine(`<span class="dim">${new Date().toString()}</span>`)];
+}
+
+function cmdEcho(arg: string): TermLine[] {
+  return [makeLine(esc(arg || ""))];
+}
+
+function cmdSudo(): TermLine[] {
+  return [
+    makeLine(`<span class="err">[sudo]</span> password for ${P.user.handle}: <span class="dim">****</span>`),
+    makeLine(`<span class="err">${P.user.handle} is not in the sudoers file. This incident will be reported. 🙂</span>`),
+  ];
+}
+
+function cmdCowsay(msg: string): TermLine[] {
+  const text = msg || "Moo! I'm a cow in your terminal.";
+  const maxW = 40;
+  // word-wrap message
+  const words = text.split(" ");
+  const msgLines: string[] = [];
+  let cur = "";
+  words.forEach((w) => {
+    if ((cur + " " + w).trim().length > maxW) { msgLines.push(cur.trim()); cur = w; }
+    else cur += " " + w;
+  });
+  if (cur.trim()) msgLines.push(cur.trim());
+  const longest = Math.max(...msgLines.map((l) => l.length));
+  const pad = (s: string) => s + " ".repeat(longest - s.length);
+
+  const out: TermLine[] = [];
+  const border = "─".repeat(longest + 2);
+  out.push(makePreLine(`<span class="nbr"> ┌${border}┐</span>`));
+  if (msgLines.length === 1) {
+    out.push(makePreLine(`<span class="nbr"> │</span> ${esc(pad(msgLines[0]))} <span class="nbr">│</span>`));
+  } else {
+    msgLines.forEach((l, i) => {
+      out.push(makePreLine(`<span class="nbr"> │</span> ${esc(pad(l))} <span class="nbr">│</span>`));
+    });
+  }
+  out.push(makePreLine(`<span class="nbr"> └${border}┘</span>`));
+  out.push(makePreLine(`<span class="dim">        \\   ^__^</span>`));
+  out.push(makePreLine(`<span class="dim">         \\  (oo)\\_______</span>`));
+  out.push(makePreLine(`<span class="dim">            (__)\\       )\\/\\</span>`));
+  out.push(makePreLine(`<span class="dim">                ||----w |</span>`));
+  out.push(makePreLine(`<span class="dim">                ||     ||</span>`));
+  return out;
+}
+
+function cmdTheme(): TermLine[] {
+  return [
+    makeLine(`<span class="dim">opening appearance settings…</span>`),
+    makeLine(`<span class="nbr">→</span> use the <span class="amberhi">⚙</span> button (top-right) to change phosphor color, scanlines, background & typing speed.`),
+  ];
+}
+
+function echoCommandLine(text: string): TermLine {
+  return makeLine(`<span class="prompt-text">${esc(PROMPT)}</span><span class="nbr">${esc(text)}</span>`);
+}
+
+function execCommand(raw: string): TermLine[] | "clear" {
+  const line = raw.trim();
+  if (!line) return [];
+  const [cmd, ...rest] = line.split(/\s+/);
+  const arg = rest.join(" ");
+  switch (cmd.toLowerCase()) {
+    case "help": case "?": case "man": return cmdHelp();
+    case "about": case "whois": return cmdAbout();
+    case "projects": case "ls-projects": return cmdProjects();
+    case "open": case "project": case "cat-project": return cmdOpen(arg);
+    case "skills": case "stack": return cmdSkills();
+    case "servers": case "server": return cmdServers();
+    case "featured": case "media": return cmdFeatured();
+    case "contact": case "social": case "connect": return cmdContact();
+    case "neofetch": case "fetch": return cmdNeofetch();
+    case "whoami": return cmdWhoami();
+    case "ls": case "dir": return cmdLs();
+    case "banner": return cmdBanner();
+    case "theme": case "settings": case "appearance": return cmdTheme();
+    case "date": return cmdDate();
+    case "echo": return cmdEcho(arg);
+    case "sudo": return cmdSudo();
+    case "cowsay": case "cow": return cmdCowsay(arg);
+    case "cat":
+      if (/about/.test(arg)) return cmdAbout();
+      if (/readme/i.test(arg)) return cmdNeofetch();
+      return [makeLine(`<span class="err">cat: ${esc(arg || "")}: No such file</span>`)];
+    case "clear": case "cls": return "clear";
+    case "exit": case "logout":
+      return [makeLine(`<span class="dim">There is no escape from the terminal. 🟢 (try the Start menu → Shut Down)</span>`)];
+    default:
+      return [makeLine(`<span class="err">command not found: ${esc(cmd)}</span> <span class="dim">— type</span> <span class="nbr">help</span> <span class="dim">for the list.</span>`)];
+  }
+}
+
+/* ============================================================
+   WELCOME LINES (shown after boot)
+   ============================================================ */
+function welcomeLines(): TermLine[] {
+  const out: TermLine[] = [];
+  out.push(...cmdBanner());
+  out.push(blankLine());
+  out.push(makeLine(`<span class="dim">Welcome to</span> <span class="head">AlexOS 95</span><span class="dim">.  Backend dev & Minecraft plugin developer.</span>`));
+  out.push(blankLine());
+  out.push(...cmdNeofetch());
+  out.push(blankLine());
+  out.push(makeLine(`<span class="nbr">●</span> <span class="dim">Type a command, click a button below, or open a folder on the desktop.</span>`));
+  out.push(blankLine());
+  return out;
+}
+
+/* ============================================================
+   TWEAKS PANEL COMPONENT
+   ============================================================ */
+function TweaksPanel({
+  phosphor,
+  setPhosphor,
+  background,
+  setBackground,
+  intensity,
+  setIntensity,
+  typingSpeed,
+  setTypingSpeed,
+}: {
+  phosphor: string;
+  setPhosphor: (v: string) => void;
+  background: string;
+  setBackground: (v: string) => void;
+  intensity: number;
+  setIntensity: (v: number) => void;
+  typingSpeed: number;
+  setTypingSpeed: (v: number) => void;
+}) {
+  const [open, setOpen] = useState(false);
+
   return (
-    <svg width="36" height="32" viewBox="0 0 36 32" fill="none">
-      <rect x="2" y="8" width="32" height="22" fill={color} opacity={hovered ? 0.35 : 0.2} />
-      <path d="M2 8h12l3-4h15v2H17l-3 4H2z" fill={color} opacity={hovered ? 0.5 : 0.3} />
-      <rect x="2" y="10" width="32" height="20" fill={color} opacity={hovered ? 0.25 : 0.15} stroke={color} strokeWidth="1" strokeOpacity={hovered ? 0.4 : 0.2} />
-      <line x1="6" y1="16" x2="18" y2="16" stroke={color} strokeWidth="0.5" opacity={0.15} />
-      <line x1="6" y1="20" x2="14" y2="20" stroke={color} strokeWidth="0.5" opacity={0.1} />
-    </svg>
+    <>
+      <button
+        className="tweaks-toggle"
+        onClick={() => setOpen(!open)}
+        title="Settings"
+        aria-label="Toggle settings panel"
+      >
+        ⚙
+      </button>
+      {open && (
+        <div className="tweaks-panel">
+          <div className="tp-title">
+            <span>Settings</span>
+            <div
+              className="tbtn"
+              onClick={() => setOpen(false)}
+              style={{ width: 16, height: 14, fontSize: 9 }}
+            >
+              ✕
+            </div>
+          </div>
+          <div className="tp-body">
+            {/* Phosphor */}
+            <div className="tp-section">Phosphor</div>
+            <div className="tp-row">
+              <div className="tp-label">Screen color</div>
+              <div className="tp-colors">
+                {Object.keys(PHOSPHORS).map((hex) => (
+                  <button
+                    key={hex}
+                    className={`tp-color-btn${phosphor === hex ? " active" : ""}`}
+                    style={{ background: hex }}
+                    onClick={() => setPhosphor(hex)}
+                    aria-label={PHOSPHORS[hex].name}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Display */}
+            <div className="tp-section">Display</div>
+            <div className="tp-row">
+              <div className="tp-label">Wallpaper</div>
+              <div className="tp-radios">
+                {Object.keys(BG_OPTIONS).map((bg) => (
+                  <label key={bg} className="tp-radio">
+                    <input
+                      type="radio"
+                      name="bg"
+                      checked={background === bg}
+                      onChange={() => setBackground(bg)}
+                    />
+                    {bg}
+                  </label>
+                ))}
+              </div>
+            </div>
+            <div className="tp-row">
+              <div className="tp-label">CRT scanlines + glow</div>
+              <div className="tp-slider-row">
+                <input
+                  type="range"
+                  className="tp-slider"
+                  min={0}
+                  max={100}
+                  step={5}
+                  value={intensity}
+                  onChange={(e) => setIntensity(Number(e.target.value))}
+                />
+                <span className="tp-slider-val">{intensity}%</span>
+              </div>
+            </div>
+
+            {/* Terminal */}
+            <div className="tp-section">Terminal</div>
+            <div className="tp-row">
+              <div className="tp-label">Typing speed</div>
+              <div className="tp-slider-row">
+                <input
+                  type="range"
+                  className="tp-slider"
+                  min={1}
+                  max={10}
+                  step={1}
+                  value={typingSpeed}
+                  onChange={(e) => setTypingSpeed(Number(e.target.value))}
+                />
+                <span className="tp-slider-val">{typingSpeed}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
-function FileIcon({ hovered }: { hovered: boolean }) {
-  return (
-    <svg width="36" height="32" viewBox="0 0 36 32" fill="none">
-      <path d="M8 2h14l8 8v20H8V2z" fill="#7a8a7a" opacity={hovered ? 0.3 : 0.18} stroke="#7a8a7a" strokeWidth="1" strokeOpacity={hovered ? 0.35 : 0.2} />
-      <path d="M22 2v8h8" fill="none" stroke="#7a8a7a" strokeWidth="0.8" opacity={0.2} />
-      <line x1="12" y1="14" x2="26" y2="14" stroke="#7a8a7a" strokeWidth="0.5" opacity={0.15} />
-      <line x1="12" y1="18" x2="22" y2="18" stroke="#7a8a7a" strokeWidth="0.5" opacity={0.12} />
-      <line x1="12" y1="22" x2="24" y2="22" stroke="#7a8a7a" strokeWidth="0.5" opacity={0.1} />
-    </svg>
-  );
-}
+/* ============================================================
+   MAIN COMPONENT
+   ============================================================ */
+export default function AlexOSPage() {
+  /* --- boot state --- */
+  const [booted, setBooted] = useState(false);
+  const [biosVisible, setBiosVisible] = useState(true);
+  const [biosFading, setBiosFading] = useState(false);
+  const [biosLines, setBiosLines] = useState<{ text: string; cls: string; _building?: boolean }[]>([]);
+  const bootDoneRef = useRef(false);
 
-interface FolderItem {
-  name: string;
-  color: string;
-  label: string;
-  section: string;
-  isFile?: boolean;
-}
+  /* --- terminal state --- */
+  const [lines, setLines] = useState<TermLine[]>([]);
+  const [cmdValue, setCmdValue] = useState("");
+  const [caretHidden, setCaretHidden] = useState(true);
+  const [history, setHistory] = useState<string[]>([]);
+  const histIdxRef = useRef(-1);
+  const busyRef = useRef(false);
 
-export default function EntrancePage() {
-  const router = useRouter();
-  const [hoveredFolder, setHoveredFolder] = useState<string | null>(null);
-  const [statusIdx, setStatusIdx] = useState(0);
-  const [statusPhase, setStatusPhase] = useState<'typing' | 'holding' | 'erasing'>('typing');
-  const [displayedText, setDisplayedText] = useState('');
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [time, setTime] = useState('');
-  const [mounted, setMounted] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [isEntering, setIsEntering] = useState(false);
-  const [bootComplete, setBootComplete] = useState(false);
-  const [bootLines, setBootLines] = useState<string[]>([]);
-
-  const allBootLines = [
-    "Initializing developer environment...",
-    "Loading JDK 21 runtime ............ OK",
-    "Mounting plugin workspace ......... OK",
-    "Scanning Maven repositories ....... OK",
-    "Resolving Spigot API 1.21.4 ...... OK",
-    "Indexing project modules .......... 6 found",
-    "Environment ready.",
-  ];
-
-  const statusMessages = [
-    "PROC > javac --compile-plugins",
-    "LOAD > spigot-api-1.21.4.jar ... OK",
-    "SCAN > /plugins/ ... 6 modules indexed",
-    "SYNC > git pull origin main ... up to date",
-    "IDLE > awaiting developer input_",
-  ];
+  /* --- window state --- */
+  const [minimized, setMinimized] = useState(false);
+  const [maximized, setMaximized] = useState(false);
+  const [winPos, setWinPos] = useState({ left: 120, top: 48 });
+  const [winSize, setWinSize] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
-    let i = 0;
-    const interval = setInterval(() => {
-      if (i < allBootLines.length) {
-        setBootLines(prev => [...prev, allBootLines[i]]);
-        i++;
-      } else {
-        clearInterval(interval);
-        setTimeout(() => setBootComplete(true), 400);
-      }
-    }, 180);
-    return () => clearInterval(interval);
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const w = Math.min(860, vw - 150);
+    const h = Math.min(620, vh - 110);
+    setWinPos({
+      left: Math.max(10, (vw - w) / 2),
+      top: Math.max(10, (vh - h) / 2) - 15
+    });
+  }, []);
+  const savedRectRef = useRef<{ left: number; top: number; width: number; height: number } | null>(null);
+  const [shutdownPhase, setShutdownPhase] = useState(0); // 0=none, 1=cascade, 2=hourglass, 3=done
+  const [cascadeErrors, setCascadeErrors] = useState<{id: number, left: number, top: number}[]>([]);
+
+  /* --- start menu --- */
+  const [startOpen, setStartOpen] = useState(false);
+
+  /* --- desktop icons --- */
+  const [selectedIcon, setSelectedIcon] = useState<number | null>(null);
+
+  /* --- tweaks --- */
+  const [phosphor, setPhosphor] = useState("#33ff66");
+  const [background, setBackground] = useState("teal");
+  const [intensity, setIntensity] = useState(55);
+  const [typingSpeed, setTypingSpeed] = useState(6);
+
+  /* --- clock --- */
+  const [clock, setClock] = useState("--:-- --");
+
+  /* --- refs --- */
+  const screenRef = useRef<HTMLDivElement>(null);
+  const cmdInputRef = useRef<HTMLInputElement>(null);
+  const winRef = useRef<HTMLDivElement>(null);
+  const measureRef = useRef<HTMLSpanElement>(null);
+
+  /* ---------- auto-scroll ---------- */
+  const scrollDown = useCallback(() => {
+    if (screenRef.current) screenRef.current.scrollTop = screenRef.current.scrollHeight;
   }, []);
 
+  useEffect(() => { scrollDown(); }, [lines, scrollDown]);
+
+  /* ---------- shutdown sequence ---------- */
   useEffect(() => {
-    setMounted(true);
-    const tick = () => setTime(new Date().toLocaleTimeString('en-US', { hour12: false }));
+    if (shutdownPhase === 1) {
+      let count = 0;
+      setCascadeErrors([]);
+      const int = setInterval(() => {
+        count++;
+        setCascadeErrors((p) => [...p, {
+          id: count,
+          left: window.innerWidth / 2 - 150 + (count * 18) % 250 - 125,
+          top: window.innerHeight / 2 - 100 + (count * 18) % 250 - 125
+        }]);
+        if (count >= 30) {
+          clearInterval(int);
+          setTimeout(() => setShutdownPhase(2), 500);
+        }
+      }, 50);
+      return () => clearInterval(int);
+    }
+  }, [shutdownPhase]);
+
+  useEffect(() => {
+    if (shutdownPhase === 2) {
+      const t = setTimeout(() => setShutdownPhase(3), 2500);
+      return () => clearTimeout(t);
+    }
+  }, [shutdownPhase]);
+
+  /* ---------- clock ---------- */
+  useEffect(() => {
+    function tick() {
+      const d = new Date();
+      let h = d.getHours();
+      const m = String(d.getMinutes()).padStart(2, "0");
+      const ap = h >= 12 ? "PM" : "AM";
+      h = h % 12 || 12;
+      setClock(`${h}:${m} ${ap}`);
+    }
     tick();
-    const i = setInterval(tick, 1000);
-    return () => clearInterval(i);
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
   }, []);
 
+  /* ---------- apply tweaks on change ---------- */
   useEffect(() => {
-    if (!bootComplete) return;
-    const msg = statusMessages[statusIdx];
-    let timeout: ReturnType<typeof setTimeout>;
-    if (statusPhase === 'typing') {
-      if (displayedText.length < msg.length) {
-        timeout = setTimeout(() => setDisplayedText(msg.slice(0, displayedText.length + 1)), 25 + Math.random() * 35);
-      } else {
-        timeout = setTimeout(() => setStatusPhase('holding'), 2200);
+    applyTweaks(phosphor, background, intensity);
+  }, [phosphor, background, intensity]);
+
+  /* ---------- initial window size ---------- */
+  useEffect(() => {
+    const w = Math.min(860, window.innerWidth - 150);
+    const h = Math.min(620, window.innerHeight - 110);
+    setWinSize({ width: w, height: h });
+  }, []);
+
+  /* ---------- BIOS boot sequence ---------- */
+  useEffect(() => {
+    let cancelled = false;
+
+    async function runBoot() {
+      const CH = 3;
+      for (const entry of P.boot) {
+        if (cancelled || bootDoneRef.current) return;
+        const txt = entry.t;
+        // Add chars in chunks
+        for (let i = 0; i < txt.length; i += CH) {
+          if (cancelled || bootDoneRef.current) return;
+          const partial = txt.slice(0, i + CH);
+          setBiosLines((prev) => {
+            const next = [...prev];
+            const last = next.length - 1;
+            if (last >= 0 && next[last]._building) {
+              next[last] = { text: partial, cls: entry.cls, _building: true } as typeof next[0];
+            } else {
+              next.push({ text: partial, cls: entry.cls, _building: true } as typeof next[0]);
+            }
+            return next;
+          });
+          await new Promise((r) => setTimeout(r, 9));
+        }
+        // Finalize line
+        setBiosLines((prev) => {
+          const next = [...prev];
+          const last = next.length - 1;
+          if (last >= 0) next[last] = { text: txt, cls: entry.cls };
+          return next;
+        });
+        if (cancelled || bootDoneRef.current) return;
+        await new Promise((r) => setTimeout(r, entry.cls === "boot" ? 450 : 34 + Math.random() * 28));
       }
-    } else if (statusPhase === 'holding') {
-      timeout = setTimeout(() => setStatusPhase('erasing'), 100);
+      await new Promise((r) => setTimeout(r, 420));
+      if (!cancelled && !bootDoneRef.current) finishBoot();
+    }
+
+    runBoot();
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  function finishBoot() {
+    if (bootDoneRef.current) return;
+    bootDoneRef.current = true;
+    setBiosFading(true);
+    setTimeout(() => {
+      setBiosVisible(false);
+      setBooted(true);
+      setLines(welcomeLines());
+      setTimeout(() => cmdInputRef.current?.focus(), 100);
+    }, 460);
+  }
+
+  function skipBoot() {
+    if (bootDoneRef.current) return;
+    finishBoot();
+  }
+
+  /* ---------- COMMANDS ---------- */
+  const COMMAND_LIST = ["help", "about", "projects", "open", "skills", "servers", "featured", "contact", "neofetch", "whoami", "ls", "banner", "cowsay", "theme", "clear", "date", "social"];
+
+  function submitCommand(val?: string) {
+    if (busyRef.current) return;
+    const text = val ?? cmdValue;
+    const echo = echoCommandLine(text);
+    const result = execCommand(text);
+    if (result === "clear") {
+      setLines([]);
     } else {
-      if (displayedText.length > 0) {
-        timeout = setTimeout(() => setDisplayedText(displayedText.slice(0, -2)), 12);
+      setLines((prev) => [...prev, echo, ...result]);
+    }
+    if (text.trim()) {
+      setHistory((prev) => [...prev, text]);
+      histIdxRef.current = history.length + 1;
+    }
+    setCmdValue("");
+  }
+
+  /* ---------- macro (animated typing) ---------- */
+  async function runMacro(command: string) {
+    if (busyRef.current) return;
+    busyRef.current = true;
+    // restore if minimized
+    setMinimized(false);
+    cmdInputRef.current?.focus();
+    setCmdValue("");
+    for (const ch of command) {
+      setCmdValue((prev) => prev + ch);
+      const speed = Math.max(2, Math.round(46 - typingSpeed * 4) * (0.7 + Math.random() * 0.7));
+      await new Promise((r) => setTimeout(r, speed));
+    }
+    await new Promise((r) => setTimeout(r, 140));
+    busyRef.current = false;
+    // We need to submit with the full command value
+    const echo = echoCommandLine(command);
+    const result = execCommand(command);
+    if (result === "clear") {
+      setLines([]);
+    } else {
+      setLines((prev) => [...prev, echo, ...result]);
+    }
+    if (command.trim()) {
+      setHistory((prev) => [...prev, command]);
+    }
+    setCmdValue("");
+  }
+
+  /* ---------- autocomplete ---------- */
+  function autocomplete() {
+    const v = cmdValue.trim();
+    if (!v) return;
+    const m = COMMAND_LIST.filter((c) => c.startsWith(v.toLowerCase()));
+    if (m.length === 1) {
+      setCmdValue(m[0] + " ");
+    } else if (m.length > 1) {
+      const echo = echoCommandLine(v);
+      setLines((prev) => [...prev, echo, makeLine(`<span class="dim">${m.join("   ")}</span>`)]);
+    }
+  }
+
+  /* ---------- keyboard ---------- */
+  function handleKeyDown(e: ReactKeyboardEvent<HTMLInputElement>) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      submitCommand();
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      if (histIdxRef.current > 0) {
+        histIdxRef.current--;
+        setCmdValue(history[histIdxRef.current] || "");
+      }
+    } else if (e.key === "ArrowDown") {
+      e.preventDefault();
+      if (histIdxRef.current < history.length - 1) {
+        histIdxRef.current++;
+        setCmdValue(history[histIdxRef.current] || "");
       } else {
-        setStatusIdx((statusIdx + 1) % statusMessages.length);
-        setStatusPhase('typing');
+        histIdxRef.current = history.length;
+        setCmdValue("");
+      }
+    } else if (e.key === "l" && e.ctrlKey) {
+      e.preventDefault();
+      setLines([]);
+    } else if (e.key === "Tab") {
+      e.preventDefault();
+      autocomplete();
+    }
+  }
+
+  /* ---------- screen click handlers ---------- */
+  function handleScreenClick(e: ReactMouseEvent<HTMLDivElement>) {
+    const target = e.target as HTMLElement;
+    // link click
+    const lk = target.closest(".lnk") as HTMLElement | null;
+    if (lk) {
+      const u = lk.dataset.url;
+      if (u && u !== "#") window.open(u, "_blank", "noopener");
+      return;
+    }
+    // project row click
+    const row = target.closest(".prow") as HTMLElement | null;
+    if (row && row.dataset.open) {
+      runMacro("open " + row.dataset.open);
+      return;
+    }
+    // focus input
+    if (!window.getSelection()?.toString()) {
+      cmdInputRef.current?.focus();
+    }
+  }
+
+  /* ---------- window drag ---------- */
+  const dragRef = useRef<{ sx: number; sy: number; ox: number; oy: number } | null>(null);
+
+  useEffect(() => {
+    function onMove(e: MouseEvent) {
+      if (!dragRef.current) return;
+      const { sx, sy, ox, oy } = dragRef.current;
+      let nx = ox + (e.clientX - sx);
+      let ny = oy + (e.clientY - sy);
+      nx = Math.max(-860 + 80, Math.min(nx, window.innerWidth - 80));
+      ny = Math.max(0, Math.min(ny, window.innerHeight - 60));
+      setWinPos({ left: nx, top: ny });
+    }
+    function onUp() {
+      dragRef.current = null;
+      document.body.style.userSelect = "";
+    }
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onUp);
+    };
+  }, []);
+
+  function handleTitleMouseDown(e: ReactMouseEvent<HTMLDivElement>) {
+    if (maximized) return;
+    if ((e.target as HTMLElement).closest(".tbtn")) return;
+    const r = winRef.current?.getBoundingClientRect();
+    if (!r) return;
+    dragRef.current = { sx: e.clientX, sy: e.clientY, ox: r.left, oy: r.top };
+    document.body.style.userSelect = "none";
+  }
+
+  /* ---------- maximize / minimize ---------- */
+  function toggleMax() {
+    if (!maximized) {
+      savedRectRef.current = { left: winPos.left, top: winPos.top, width: winSize.width, height: winSize.height };
+      setWinPos({ left: 0, top: 0 });
+      setWinSize({ width: window.innerWidth, height: window.innerHeight - 32 });
+      setMaximized(true);
+    } else {
+      if (savedRectRef.current) {
+        setWinPos({ left: savedRectRef.current.left, top: savedRectRef.current.top });
+        setWinSize({ width: savedRectRef.current.width, height: savedRectRef.current.height });
+      }
+      setMaximized(false);
+    }
+  }
+
+  /* ---------- start menu items ---------- */
+  const SM_ITEMS: { label?: string; cmd?: string; ico?: string; sep?: boolean; action?: string }[] = [
+    { label: "Projects", cmd: "projects", ico: "/icons/old-folder-icon.png" },
+    { label: "Servers", cmd: "servers", ico: "/icons/server-icon.png" },
+    { label: "Tech Stack", cmd: "skills", ico: "/icons/settings-icon.png" },
+    { label: "About Me", cmd: "about", ico: "/icons/profile-icon.png" },
+    { label: "Featured In", cmd: "featured", ico: "/icons/featured-in-icon.png" },
+    { label: "Contact", cmd: "contact", ico: "/icons/contact-icon.png" },
+    { sep: true },
+    { label: "Run neofetch", cmd: "neofetch", ico: "/icons/neofetch-icon.png" },
+    { label: "Help", cmd: "help", ico: "/icons/help-icon.png" },
+    { sep: true },
+    { label: "Shut Down…", action: "shutdown", ico: "/icons/shut-down-image.png" },
+  ];
+
+  /* ---------- desktop icons ---------- */
+  const ICONS = [
+    { label: "Terminal", cmd: "", svg: iconTerminal() },
+    { label: "Projects", cmd: "projects", svg: iconFolder("#ffd166") },
+    { label: "Servers", cmd: "servers", svg: iconFolder("#7fdfff") },
+    { label: "Tech Stack", cmd: "skills", svg: iconFolder("#33ff66") },
+    { label: "About", cmd: "about", svg: iconFolder("#c79bff") },
+    { label: "README.txt", cmd: "neofetch", svg: iconFile() },
+    { label: "Contact", cmd: "contact", svg: iconFolder("#ff9bb3") },
+  ];
+
+  /* ---------- quickbar commands ---------- */
+  const QUICK: [string, string][] = [
+    ["about", "about"], ["projects", "projects"], ["skills", "skills"],
+    ["servers", "servers"], ["featured", "featured"], ["contact", "contact"],
+    ["neofetch", "neofetch"], ["help", "help"], ["clear", "clear"],
+  ];
+
+  /* ---------- global click to close start ---------- */
+  useEffect(() => {
+    function onClick(e: MouseEvent) {
+      const t = e.target as HTMLElement;
+      if (!t.closest(".startmenu") && !t.closest(".start-btn")) {
+        setStartOpen(false);
       }
     }
-    return () => clearTimeout(timeout);
-  }, [displayedText, statusPhase, statusIdx, bootComplete]);
-
-  const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    setMousePos({ x: (e.clientX - rect.left) / rect.width - 0.5, y: (e.clientY - rect.top) / rect.height - 0.5 });
+    document.addEventListener("click", onClick);
+    return () => document.removeEventListener("click", onClick);
   }, []);
 
-  const handleEnter = () => {
-    setIsEntering(true);
-    setTimeout(() => router.push('/portfolio'), 700);
-  };
+  /* ---------- global key to skip boot ---------- */
+  useEffect(() => {
+    function onKey() {
+      if (!bootDoneRef.current) skipBoot();
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const folders: FolderItem[] = [
-    { name: "Projects", color: "#e8a035", label: "Open source & university", section: "plugins" },
-    { name: "Servers", color: "#4a9fb5", label: "Minecraft networks", section: "servers" },
-    { name: "Stack", color: "#6a8ad0", label: "Skills & technologies", section: "skills" },
-    { name: "Featured In", color: "#9b6ab5", label: "YouTube & media", section: "featured" },
-    { name: "About", color: "#5ba06a", label: "Background & experience", section: "about" },
-    { name: "Contact.md", color: "#8a8a70", label: "Get in touch", section: "contact", isFile: true },
-  ];
+  /* ---------- measure span for caret position ---------- */
+  useEffect(() => {
+    if (measureRef.current && cmdInputRef.current) {
+      measureRef.current.textContent = cmdValue || "";
+      const w = Math.max(2, measureRef.current.offsetWidth + 2);
+      cmdInputRef.current.style.width = w + "px";
+    }
+  }, [cmdValue]);
 
+  /* ============================================================
+     RENDER
+     ============================================================ */
   return (
-    <AnimatePresence>
-      <motion.div ref={containerRef} onMouseMove={handleMouseMove} className="min-h-screen relative overflow-hidden cursor-default select-none" style={{ background: '#090b0e' }} animate={isEntering ? { opacity: 0, scale: 1.03 } : {}} transition={{ duration: 0.7 }}>
-        <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse 70% 50% at 25% 45%, rgba(15,25,40,0.9) 0%, transparent 70%), radial-gradient(ellipse 50% 40% at 80% 25%, rgba(25,15,35,0.3) 0%, transparent 60%), linear-gradient(175deg, #07090c 0%, #0c0f14 50%, #0a0d11 100%)' }} />
-        <div className="absolute inset-0 pointer-events-none z-40" style={{ background: 'repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.02) 3px, rgba(0,0,0,0.02) 4px)' }} />
-        <div className="absolute inset-0 pointer-events-none z-40 opacity-[0.03]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`, backgroundSize: '128px' }} />
-        <div className="absolute inset-0 pointer-events-none opacity-[0.025]" style={{ backgroundImage: 'linear-gradient(rgba(100,140,200,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(100,140,200,0.3) 1px, transparent 1px)', backgroundSize: '48px 48px', transform: `translate(${mousePos.x * -3}px, ${mousePos.y * -3}px)`, transition: 'transform 0.4s ease-out' }} />
+    <>
+      {/* hidden measure span for input width */}
+      <span
+        ref={measureRef}
+        style={{
+          position: "absolute",
+          visibility: "hidden",
+          whiteSpace: "pre",
+          fontFamily: "var(--font-term)",
+          fontSize: "13.5px",
+        }}
+      />
 
-        <div className="absolute pointer-events-none" style={{ left: '3%', top: '15%', transform: `translate(${mousePos.x * -12}px, ${mousePos.y * -8}px)`, transition: 'transform 0.5s ease-out' }}>
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2, duration: 2 }} className="font-mono text-[9px] space-y-1 text-slate-800">
-            <div><span className="text-slate-700">public class</span> PortfolioPlugin</div>
-            <div className="pl-3"><span className="text-slate-700">extends</span> JavaPlugin {'{'}</div>
-            <div className="pl-6">@Override</div>
-            <div className="pl-6"><span className="text-slate-700">public void</span> onEnable() {'{'}</div>
-            <div className="pl-9 text-slate-800/50">{'// initialize systems'}</div>
-            <div className="pl-6">{'}'}</div>
-            <div className="pl-3">{'}'}</div>
-          </motion.div>
-        </div>
-
-        <div className="absolute pointer-events-none hidden lg:block" style={{ right: '4%', bottom: '20%', transform: `translate(${mousePos.x * 10}px, ${mousePos.y * 6}px)`, transition: 'transform 0.5s ease-out' }}>
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.5, duration: 2 }} className="font-mono text-[8px] text-slate-800 space-y-0.5">
-            <div>├── spigot-api</div>
-            <div>│   ├── bukkit-1.21.4</div>
-            <div>│   └── nms-mappings</div>
-            <div>├── vault-api</div>
-            <div>├── protocollib</div>
-            <div>└── adventure-api</div>
-          </motion.div>
-        </div>
-
-        <div className="absolute pointer-events-none" style={{ left: '15%', top: '-15%', width: 180, height: '130%', background: 'linear-gradient(180deg, rgba(60,100,160,0.025) 0%, transparent 50%)', transform: `rotate(-12deg) translateX(${mousePos.x * 15}px)`, transition: 'transform 0.6s ease-out', filter: 'blur(35px)' }} />
-
-        <div className="relative z-10 min-h-screen flex">
-          <div className="hidden lg:flex flex-col justify-end pb-14 pl-8 w-44 shrink-0">
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: bootComplete ? 1 : 0 }} transition={{ delay: 0.5, duration: 1 }} className="font-mono text-[9px] tracking-[0.15em] text-slate-700" style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}>
-              <div>C:\DEV\WORKSPACE\PLUGINS</div>
-            </motion.div>
+      {/* ---- BIOS BOOT ---- */}
+      {biosVisible && (
+        <div
+          id="bios"
+          onClick={skipBoot}
+          style={{
+            opacity: biosFading ? 0 : 1,
+            transition: biosFading ? "opacity .45s ease" : undefined,
+          }}
+        >
+          <div id="biosout">
+            {biosLines.map((bl, i) => (
+              <div key={i} className={`bline ${bl.cls}`}>
+                {bl.text}
+                {i === biosLines.length - 1 && <span className="cursor" />}
+              </div>
+            ))}
           </div>
+          <div className="skip">[ click anywhere or press any key to skip ]</div>
+        </div>
+      )}
 
-          <div className="flex-1 flex items-center justify-center py-10 px-4 lg:px-0">
-            <div className="w-full max-w-[820px]" style={{ transform: `translate(${mousePos.x * -3}px, ${mousePos.y * -2}px)`, transition: 'transform 0.2s ease-out' }}>
-              <AnimatePresence>
-                {!bootComplete && (
-                  <motion.div exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.4 }} className="font-mono text-[12px] text-slate-500 space-y-1 mb-4">
-                    {bootLines.map((line, i) => (
-                      <motion.div key={i} initial={{ opacity: 0, x: -5 }} animate={{ opacity: 1, x: 0 }} className={line?.includes('OK') ? 'text-[#5a8a5a]' : line?.includes('ready') ? 'text-[#6a9ad0]' : ''}>{line}</motion.div>
-                    ))}
-                    <motion.span animate={{ opacity: [1, 0] }} transition={{ repeat: Infinity, duration: 0.5 }}>▌</motion.span>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+      {/* ---- DESKTOP ---- */}
+      <div
+        id="desktop"
+        className={booted ? "on" : ""}
+        onMouseDown={(e) => {
+          const t = e.target as HTMLElement;
+          if (t.id === "desktop" || t.id === "icons") {
+            setSelectedIcon(null);
+            setStartOpen(false);
+          }
+        }}
+      >
+        {/* Desktop Icons */}
+        <div id="icons">
+          {ICONS.map((ic, i) => (
+            <div
+              key={i}
+              className={`dicon${selectedIcon === i ? " sel" : ""}`}
+              onClick={(e) => {
+                e.stopPropagation();
+                setSelectedIcon(i);
+              }}
+              onDoubleClick={() => {
+                setMinimized(false);
+                if (ic.cmd) runMacro(ic.cmd);
+                else cmdInputRef.current?.focus();
+              }}
+            >
+              <span className="ico" dangerouslySetInnerHTML={{ __html: ic.svg }} />
+              <span className="lbl">{ic.label}</span>
+            </div>
+          ))}
+        </div>
 
-              {bootComplete && (
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}>
-                  <div className="absolute -inset-6" style={{ background: 'radial-gradient(ellipse at 35% 50%, rgba(20,50,80,0.06) 0%, transparent 70%)', filter: 'blur(25px)', transform: 'translate(6px, 10px)' }} />
-                  <div className="relative" style={{ background: 'linear-gradient(180deg, #191c22 0%, #12141a 100%)', border: '1px solid rgba(255,255,255,0.05)', boxShadow: '0 0 0 1px rgba(0,0,0,0.6), 0 25px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
-                    {/* Title bar */}
-                    <div className="px-3 py-[6px] flex items-center justify-between" style={{ background: 'linear-gradient(180deg, #284a75 0%, #1d3860 50%, #1a3358 70%, #1e3a5f 100%)', borderBottom: '1px solid rgba(0,0,0,0.4)' }}>
-                      <div className="flex items-center gap-2">
-                        <svg width="14" height="12" viewBox="0 0 14 12" fill="none"><rect x="1" y="3" width="12" height="9" fill="#d4a030" opacity={0.6} /><path d="M1 3h5l2-2h5v1H8L6 4H1z" fill="#e8b840" opacity={0.5} /></svg>
-                        <span className="text-white/85 text-[13px]" style={{ fontFamily: 'Tahoma, sans-serif', textShadow: '1px 1px 2px rgba(0,0,0,0.6)' }}>Developer Workspace — Plugin Projects</span>
-                      </div>
-                      <div className="flex items-center gap-[2px]">
-                        {(['—', '□', '✕'] as const).map((sym, i) => (
-                          <button key={i} className="w-[22px] h-[22px] flex items-center justify-center rounded-[2px]" style={{ background: i === 2 ? 'linear-gradient(180deg, #c04848 0%, #982e2e 100%)' : 'linear-gradient(180deg, #3a6da0 0%, #2a5080 100%)', border: '1px solid rgba(0,0,0,0.3)', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.12)' }}>
-                            <span className="text-white/90 text-[8px]">{sym}</span>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                    {/* Toolbar */}
-                    <div className="px-3 py-1.5 flex items-center gap-4 text-[11px] font-mono text-slate-600" style={{ background: 'linear-gradient(180deg, #1c1f26 0%, #181b21 100%)', borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
-                      {['File', 'Edit', 'View', 'Tools', 'Help'].map(l => <span key={l} className="hover:text-slate-400 cursor-default transition-colors">{l}</span>)}
-                    </div>
-                    {/* Address bar */}
-                    <div className="px-3 py-2 flex items-center gap-2" style={{ background: 'linear-gradient(180deg, #1a1d24 0%, #16191f 100%)', borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
-                      <span className="text-[10px] text-slate-600 font-mono shrink-0 tracking-wider">PATH</span>
-                      <div className="flex-1 flex items-center px-2 py-[5px] font-mono text-[12px]" style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.04)', borderTop: '1px solid rgba(0,0,0,0.4)' }}>
-                        <span className="text-slate-600">~/dev/</span><span className="text-[#6aaa6a]">workspace</span><span className="text-slate-700">/</span><span className="text-[#d0a040]">plugins</span><span className="text-slate-700">/</span>
-                        <motion.span className="text-slate-600" animate={{ opacity: [1, 0] }} transition={{ repeat: Infinity, duration: 0.8 }}>▌</motion.span>
-                      </div>
-                    </div>
-                    {/* Side panel + content */}
-                    <div className="flex" style={{ minHeight: 420 }}>
-                      <div className="hidden sm:block w-[175px] shrink-0 py-4 px-3 font-mono text-[11px]" style={{ borderRight: '1px solid rgba(255,255,255,0.03)', background: 'rgba(0,0,0,0.1)' }}>
-                        <div className="text-slate-600 mb-2 tracking-wider text-[9px]">EXPLORER</div>
-                        <div className="space-y-[3px] text-slate-600">
-                          <div className="text-[#6aaa6a]">▾ workspace</div>
-                          <div className="pl-3 text-[#d0a040]">▾ projects</div>
-                          <div className="pl-6 text-slate-500">├── src/</div>
-                          <div className="pl-6 text-slate-500">├── pom.xml</div>
-                          <div className="pl-6 text-slate-500">└── config/</div>
-                          <div className="pl-3 text-slate-600">▸ servers</div>
-                          <div className="pl-3 text-slate-600">▸ stack</div>
-                          <div className="pl-3 text-slate-600">▸ featured</div>
-                          <div className="pl-3 text-slate-600">▸ about</div>
-                          <div className="pl-3 text-slate-700">▸ .git</div>
-                        </div>
-                        <div className="mt-6 pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.03)' }}>
-                          <div className="text-[9px] text-slate-700 tracking-wider mb-2">STATS</div>
-                          <div className="space-y-1 text-[10px]">
-                            <div className="flex justify-between"><span className="text-slate-700">Plugins</span><span className="text-[#d0a040]">20+</span></div>
-                            <div className="flex justify-between"><span className="text-slate-700">Servers</span><span className="text-[#4a9fb5]">2+</span></div>
-                            <div className="flex justify-between"><span className="text-slate-700">Projects</span><span className="text-[#5ba06a]">15+</span></div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex-1 p-6">
-                        <div className="grid grid-cols-3 gap-x-2 gap-y-0">
-                          {folders.map((folder, i) => {
-                            const isHovered = hoveredFolder === folder.name;
-                            return (
-                              <motion.div key={folder.name} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 + i * 0.08, duration: 0.4 }}>
-                                <div className="flex flex-col items-center py-3 px-1 cursor-pointer" onMouseEnter={() => setHoveredFolder(folder.name)} onMouseLeave={() => setHoveredFolder(null)} onClick={() => { setIsEntering(true); setTimeout(() => router.push(`/portfolio#${folder.section}`), 700); }} style={{ background: isHovered ? 'rgba(50,80,120,0.08)' : 'transparent', border: isHovered ? '1px solid rgba(70,100,150,0.12)' : '1px solid transparent', transition: 'all 0.12s ease' }}>
-                                  <motion.div animate={isHovered ? { y: -1.5 } : { y: 0 }} transition={{ duration: 0.15 }}>
-                                    {folder.isFile ? <FileIcon hovered={isHovered} /> : <FolderIcon color={folder.color} hovered={isHovered} />}
-                                  </motion.div>
-                                  <span className="text-[11px] mt-1 text-center leading-tight" style={{ color: isHovered ? '#a0b8d0' : '#555e6a', fontFamily: 'Tahoma, sans-serif', transition: 'color 0.12s ease' }}>{folder.name}</span>
-                                  <AnimatePresence>
-                                    {isHovered && <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-[9px] text-slate-700 font-mono mt-0.5">{folder.label}</motion.span>}
-                                  </AnimatePresence>
-                                </div>
-                              </motion.div>
-                            );
-                          })}
-                        </div>
-                        <div className="mt-6 mb-4 flex items-center gap-2">
-                          <div className="h-px flex-1" style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.04), rgba(255,255,255,0.05), transparent)' }} />
-                          <span className="text-[9px] font-mono text-slate-700 tracking-[0.2em]">LAUNCH</span>
-                          <div className="h-px w-8" style={{ background: 'linear-gradient(90deg, rgba(255,255,255,0.04), transparent)' }} />
-                        </div>
-                        <motion.button initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8, duration: 0.5 }} onClick={handleEnter} className="group w-full py-3 cursor-pointer" style={{ background: 'linear-gradient(180deg, rgba(25,50,75,0.35) 0%, rgba(20,40,65,0.25) 100%)', border: '1px solid rgba(50,90,140,0.18)', transition: 'all 0.15s ease' }} onMouseEnter={(e) => { e.currentTarget.style.background = 'linear-gradient(180deg, rgba(30,60,90,0.45) 0%, rgba(25,50,80,0.35) 100%)'; e.currentTarget.style.borderColor = 'rgba(60,110,170,0.25)'; }} onMouseLeave={(e) => { e.currentTarget.style.background = 'linear-gradient(180deg, rgba(25,50,75,0.35) 0%, rgba(20,40,65,0.25) 100%)'; e.currentTarget.style.borderColor = 'rgba(50,90,140,0.18)'; }}>
-                          <div className="flex items-center justify-center gap-3">
-                            <span className="text-[13px] font-mono text-slate-500 group-hover:text-slate-300 transition-colors">▸ Open Developer Portfolio</span>
-                            <motion.span className="text-[10px] font-mono text-slate-700" animate={{ opacity: [0.3, 0.6, 0.3] }} transition={{ repeat: Infinity, duration: 2 }}>[ENTER]</motion.span>
-                          </div>
-                        </motion.button>
-                      </div>
-                    </div>
-                    {/* Status bar */}
-                    <div className="px-3 py-[4px] flex items-center justify-between" style={{ background: 'rgba(0,0,0,0.2)', borderTop: '1px solid rgba(255,255,255,0.025)' }}>
-                      <div className="flex items-center gap-2 font-mono text-[10px] text-slate-600 min-h-[14px]">
-                        <div className="w-[5px] h-[5px]" style={{ background: '#4a7a4a', boxShadow: '0 0 5px rgba(74,122,74,0.4)' }} />
-                        <span>{displayedText}</span>
-                        <motion.span animate={{ opacity: [1, 0] }} transition={{ repeat: Infinity, duration: 0.5 }} className="text-slate-600">_</motion.span>
-                      </div>
-                      <div className="flex items-center gap-3 font-mono text-[10px] text-slate-700">
-                        <span>6 modules</span><span className="text-slate-800">|</span><span>Java 21</span><span className="text-slate-800">|</span><span>{mounted ? time : '--:--:--'}</span>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
+        {/* Terminal Window */}
+        <div
+          className="win"
+          id="termwin"
+          ref={winRef}
+          style={{
+            left: maximized ? 0 : winPos.left,
+            top: maximized ? 0 : winPos.top,
+            width: maximized ? "100vw" : winSize.width || undefined,
+            height: maximized ? "calc(100vh - 32px)" : winSize.height || undefined,
+            display: minimized ? "none" : "flex",
+            zIndex: 30,
+          }}
+          onMouseDown={() => {/* bring front */}}
+        >
+          {/* Title bar */}
+          <div
+            className="titlebar"
+            onMouseDown={handleTitleMouseDown}
+            onDoubleClick={(e) => {
+              if (!(e.target as HTMLElement).closest(".tbtn")) toggleMax();
+            }}
+          >
+            <div className="tb-left">
+              <span className="tb-ico" aria-hidden="true">
+                <svg width="16" height="14" viewBox="0 0 16 14">
+                  <rect x="0.5" y="0.5" width="15" height="13" fill="#000" stroke="#fff" />
+                  <text x="2.4" y="9.5" fontFamily="monospace" fontSize="7" fill="#33ff66">&gt;_</text>
+                </svg>
+              </span>
+              <span className="tt">alexvila04@portfolio: ~ — bash</span>
+            </div>
+            <div className="tbtns">
+              <div className="tbtn" onClick={() => setMinimized(true)}>_</div>
+              <div className="tbtn" onClick={toggleMax}>▢</div>
+              <div className="tbtn" onClick={() => setMinimized(true)}>✕</div>
             </div>
           </div>
 
-          <div className="hidden lg:flex flex-col justify-between py-10 pr-6 w-44 shrink-0 items-end">
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: bootComplete ? 1 : 0 }} transition={{ delay: 1, duration: 1.5 }} className="text-right space-y-1 font-mono">
-              <div className="text-[8px] text-slate-800 tracking-widest">SESSION.2026</div>
-              <div className="text-[8px] text-slate-800">JDK-21 / Spigot</div>
-            </motion.div>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: bootComplete ? 1 : 0 }} transition={{ delay: 1.5, duration: 1.5 }} className="font-mono text-[8px] text-slate-800 text-right">
-              dev.workspace<br/>v0.1.0
-            </motion.div>
+          {/* Menu bar */}
+          <div className="menubar">
+            <span onClick={() => runMacro("help")}>File</span>
+            <span onClick={() => { setLines([]); }}>Edit</span>
+            <span onClick={() => runMacro("neofetch")}>View</span>
+            <span onClick={() => runMacro("theme")}>Settings</span>
+            <span onClick={() => runMacro("help")}>Help</span>
+          </div>
+
+          {/* Screen */}
+          <div className="screen-wrap">
+            <div className="screen" ref={screenRef} onClick={handleScreenClick}>
+              {lines.map((ln, i) => (
+                <div
+                  key={i}
+                  className={ln.cls}
+                  data-open={ln.isProw ? String(ln.prowIdx) : undefined}
+                  role={ln.isProw ? "button" : undefined}
+                  tabIndex={ln.isProw ? 0 : undefined}
+                  dangerouslySetInnerHTML={{ __html: ln.html }}
+                />
+              ))}
+            </div>
+            <div className="crt-scan" />
+            <div className="crt-vig" />
+            <div className="crt-flicker" />
+          </div>
+
+          {/* Input line */}
+          <div className="inputline">
+            <span className="prompt-text">{PROMPT}</span>
+            <input
+              ref={cmdInputRef}
+              className="cmd-input"
+              value={cmdValue}
+              onChange={(e) => setCmdValue(e.target.value)}
+              onKeyDown={handleKeyDown}
+              onFocus={() => setCaretHidden(false)}
+              onBlur={() => setCaretHidden(true)}
+              autoComplete="off"
+              autoCapitalize="off"
+              spellCheck={false}
+              style={{ flex: "0 0 auto" }}
+            />
+            <span className={`fakecaret${caretHidden ? " hide" : ""}`} />
+          </div>
+
+          {/* Quickbar */}
+          <div className="quickbar" id="quickbar">
+            {QUICK.map(([label, cmd]) => (
+              <button key={label} className="qbtn" onClick={() => runMacro(cmd)}>
+                {label}
+              </button>
+            ))}
           </div>
         </div>
 
-        <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: bootComplete ? 1 : 0 }} transition={{ delay: 0.5, duration: 1.5, ease: 'easeOut' }} className="absolute bottom-0 left-0 right-0 h-px origin-left" style={{ background: 'linear-gradient(90deg, transparent 5%, rgba(50,80,120,0.12) 30%, rgba(50,80,120,0.08) 70%, transparent 95%)' }} />
-      </motion.div>
-    </AnimatePresence>
+        {/* ---- TASKBAR ---- */}
+        <div id="taskbar">
+          <div
+            className={`start-btn${startOpen ? " open" : ""}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              setStartOpen(!startOpen);
+            }}
+          >
+            <span className="flag" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 16 16">
+                <rect x="1" y="1" width="6.5" height="6.5" fill="#ff5555" />
+                <rect x="8.5" y="1" width="6.5" height="6.5" fill="#33ff66" />
+                <rect x="1" y="8.5" width="6.5" height="6.5" fill="#5599ff" />
+                <rect x="8.5" y="8.5" width="6.5" height="6.5" fill="#ffd166" />
+              </svg>
+            </span>
+            Start
+          </div>
+          <div className="tasksep" />
+          <div
+            className="taskwin"
+            onClick={() => {
+              setMinimized(false);
+              cmdInputRef.current?.focus();
+            }}
+          >
+            <svg width="14" height="12" viewBox="0 0 16 14">
+              <rect x="0.5" y="0.5" width="15" height="13" fill="#000" stroke="#555" />
+              <text x="2.4" y="9.5" fontFamily="monospace" fontSize="7" fill="#33ff66">&gt;_</text>
+            </svg>
+            <span>alexvila04 — bash</span>
+          </div>
+          <div className="tray">
+            <span className="ticon" title="sound" style={{ display: "flex", alignItems: "center" }}>
+              <img src="/icons/sound-icon.png" alt="sound" style={{ width: 28, height: 28, objectFit: "contain", imageRendering: "pixelated" }} />
+            </span>
+            <span>{clock}</span>
+          </div>
+        </div>
+
+        {/* ---- START MENU ---- */}
+        <div
+          className={`startmenu${startOpen ? " open" : ""}`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="sm-rail">
+            Alex<b>OS</b> 95
+          </div>
+          <div className="sm-items">
+            {SM_ITEMS.map((it, i) => {
+              if (it.sep) return <div key={i} className="smsep" />;
+              return (
+                <div
+                  key={i}
+                  className="smitem"
+                  onClick={() => {
+                    setStartOpen(false);
+                    if (it.action === "shutdown") setShutdownPhase(1);
+                    else if (it.cmd) runMacro(it.cmd);
+                  }}
+                >
+                  <span className="smico">
+                    {it.ico && <img src={it.ico} alt="" style={{ width: 28, height: 28, objectFit: "contain", verticalAlign: "middle" }} />}
+                  </span>
+                  <span>{it.label}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* ---- TWEAKS PANEL ---- */}
+      {booted && (
+        <TweaksPanel
+          phosphor={phosphor}
+          setPhosphor={setPhosphor}
+          background={background}
+          setBackground={setBackground}
+          intensity={intensity}
+          setIntensity={setIntensity}
+          typingSpeed={typingSpeed}
+          setTypingSpeed={setTypingSpeed}
+        />
+      )}
+
+
+      {/* ---- SHUTDOWN SEQUENCE ---- */}
+      {shutdownPhase === 1 && cascadeErrors.map((err) => (
+        <div
+          key={err.id}
+          style={{
+            position: "fixed", left: err.left, top: err.top, zIndex: 9000 + err.id,
+            width: 320, background: "var(--w95-face)", border: "2px solid",
+            borderColor: "var(--w95-light) var(--w95-dark) var(--w95-dark) var(--w95-light)",
+            boxShadow: "1px 1px 0 var(--w95-shadow)", fontFamily: "var(--font-ui)", color: "#000"
+          }}
+        >
+          <div style={{ background: "linear-gradient(90deg, #000080, #1084d0)", color: "#fff", padding: "3px 6px", fontWeight: "bold", fontSize: 12 }}>
+            Fatal Error
+          </div>
+          <div style={{ padding: "16px 20px", display: "flex", alignItems: "center", gap: 16 }}>
+            <div style={{ background: "#ff5555", borderRadius: "50%", width: 36, height: 36, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: "bold", fontSize: 24, flexShrink: 0, boxShadow: "inset -1px -1px 3px rgba(0,0,0,0.3)" }}>✕</div>
+            <div style={{ fontSize: 13, lineHeight: 1.4 }}>A fatal exception 0E has occurred at 0028:C0011E36.<br />The current application will be terminated.</div>
+          </div>
+        </div>
+      ))}
+
+      {shutdownPhase === 2 && (
+        <div style={{ position: "fixed", inset: 0, zIndex: 9999, background: "#000", display: "grid", placeItems: "center" }}>
+          <img src="/icons/hour-glass.webp" alt="Loading..." style={{ width: 96, height: 96, imageRendering: "pixelated" }} />
+        </div>
+      )}
+
+      {shutdownPhase === 3 && (
+        <div
+          onClick={() => setShutdownPhase(0)}
+          style={{
+            position: "fixed", inset: 0, zIndex: 9999, background: "#0000AA", color: "#FFFFFF",
+            fontFamily: "monospace, 'Courier New', Courier", fontSize: 16, display: "flex", flexDirection: "column",
+            padding: "10% 15%", cursor: "default"
+          }}
+        >
+          <div style={{ alignSelf: "center", background: "#AAAAAA", color: "#0000AA", padding: "2px 12px", marginBottom: 32, fontWeight: "bold" }}>
+            Windows
+          </div>
+          <div style={{ lineHeight: 1.6 }}>
+            <p>An error has occurred. To continue:</p>
+            <p style={{ marginTop: 20 }}>Press Enter to return to Windows, or</p>
+            <p style={{ marginTop: 20 }}>
+              Press CTRL+ALT+DEL to restart your computer. If you do this,<br />
+              you will lose any unsaved information in all open applications.
+            </p>
+            <p style={{ marginTop: 20 }}>Error: 0E : 016F : BFF9B3D4</p>
+          </div>
+          <div style={{ marginTop: 40, textAlign: "center" }}>
+            Press any key to continue <span className="blink">_</span>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

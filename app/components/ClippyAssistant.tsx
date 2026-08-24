@@ -1,3 +1,12 @@
+/**
+ * clippy.js
+ * Copyright (c) 2012 Fireplace, Inc. Released under the MIT License.
+ *
+ * All Microsoft agents, including agent names, the Clippy brand,
+ * animations and sound resources are property and trademarks of Microsoft Corporation.
+ * Used for personal, non-commercial portfolio demonstration.
+ */
+
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from "react";

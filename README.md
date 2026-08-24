@@ -56,5 +56,10 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Feel free to reach out via [Email](mailto:vilatrix.codecrafter@gmail.com) or connect on [LinkedIn](https://www.linkedin.com/in/alberth-alexander-godoy-avila-91509b334/).
 
+## 📜 Credits & Acknowledgments
+
+- **Clippy.js**: Built using [clippy.js](https://github.com/smore-inc/clippy.js) by Fireplace, Inc. (MIT License).
+- **Trademarks**: Clippy character assets, animations, and sound effects are intellectual property and trademarks of Microsoft Corporation. Used solely for non-commercial, personal portfolio demonstration purposes.
+
 ---
 *Crafted with ☕ & Java | Alberth Alexander Godoy Avila (AlexVila04)*

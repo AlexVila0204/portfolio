@@ -346,6 +346,20 @@ export default function ClippyAssistant({
     };
   }, [agentData, visible, playAnimation]);
 
+  // Resize listener to keep Clippy within screen bounds
+  useEffect(() => {
+    function handleResize() {
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      setPos((prev) => ({
+        x: Math.max(10, Math.min(vw - 115, prev.x)),
+        y: Math.max(10, Math.min(vh - 115, prev.y)),
+      }));
+    }
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   // Click directly on Clippy -> reaction + fun quote (re-opens balloon only on explicit user click)
   const handleClippyClick = () => {
     if (isDraggingRef.current) return;
@@ -358,9 +372,9 @@ export default function ClippyAssistant({
     speak(randomQuote, getDefaultSuggestions(), true);
   };
 
-  // Drag & drop logic
-  const handleMouseDown = (e: React.MouseEvent) => {
-    e.preventDefault();
+  // Drag & drop logic with Pointer Events (Touch, Mouse, Pen)
+  const handlePointerDown = (e: React.PointerEvent) => {
+    if (e.button !== 0 && e.pointerType === "mouse") return;
     isDraggingRef.current = false;
     dragOffsetRef.current = {
       x: e.clientX - pos.x,
@@ -370,7 +384,7 @@ export default function ClippyAssistant({
     let startX = e.clientX;
     let startY = e.clientY;
 
-    function onMouseMove(moveEvent: MouseEvent) {
+    function onPointerMove(moveEvent: PointerEvent) {
       const dx = Math.abs(moveEvent.clientX - startX);
       const dy = Math.abs(moveEvent.clientY - startY);
       if (dx > 4 || dy > 4) {
@@ -379,18 +393,20 @@ export default function ClippyAssistant({
 
       const vw = window.innerWidth;
       const vh = window.innerHeight;
-      const nx = Math.max(10, Math.min(vw - 135, moveEvent.clientX - dragOffsetRef.current.x));
-      const ny = Math.max(10, Math.min(vh - 130, moveEvent.clientY - dragOffsetRef.current.y));
+      const nx = Math.max(8, Math.min(vw - 115, moveEvent.clientX - dragOffsetRef.current.x));
+      const ny = Math.max(8, Math.min(vh - 115, moveEvent.clientY - dragOffsetRef.current.y));
       setPos({ x: nx, y: ny });
     }
 
-    function onMouseUp() {
-      window.removeEventListener("mousemove", onMouseMove);
-      window.removeEventListener("mouseup", onMouseUp);
+    function onPointerUp() {
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerup", onPointerUp);
+      window.removeEventListener("pointercancel", onPointerUp);
     }
 
-    window.addEventListener("mousemove", onMouseMove);
-    window.addEventListener("mouseup", onMouseUp);
+    window.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("pointerup", onPointerUp);
+    window.addEventListener("pointercancel", onPointerUp);
   };
 
   // Calculate Speech Balloon Side dynamically
@@ -527,7 +543,7 @@ export default function ClippyAssistant({
       {/* ---- CLIPPY SPRITE ---- */}
       <div
         className="clippy-sprite"
-        onMouseDown={handleMouseDown}
+        onPointerDown={handlePointerDown}
         onClick={handleClippyClick}
         title="Click me for tips or drag me around!"
         style={{
@@ -537,6 +553,7 @@ export default function ClippyAssistant({
           backgroundPosition: `-${spriteX}px -${spriteY}px`,
           backgroundRepeat: "no-repeat",
           cursor: "grab",
+          touchAction: "none",
           filter: "drop-shadow(2px 4px 6px rgba(0,0,0,0.35))",
         }}
       />

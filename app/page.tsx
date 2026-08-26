@@ -960,6 +960,8 @@ function welcomeLines(): TermLine[] {
    TWEAKS PANEL COMPONENT
    ============================================================ */
 function TweaksPanel({
+  open,
+  setOpen,
   phosphor,
   setPhosphor,
   background,
@@ -969,6 +971,8 @@ function TweaksPanel({
   typingSpeed,
   setTypingSpeed,
 }: {
+  open: boolean;
+  setOpen: (v: boolean) => void;
   phosphor: string;
   setPhosphor: (v: string) => void;
   background: string;
@@ -978,8 +982,6 @@ function TweaksPanel({
   typingSpeed: number;
   setTypingSpeed: (v: number) => void;
 }) {
-  const [open, setOpen] = useState(false);
-
   return (
     <>
       <button
@@ -1222,23 +1224,55 @@ export default function AlexOSPage() {
   const busyRef = useRef(false);
 
   useEffect(() => {
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    const w = Math.min(860, vw - 150);
-    const h = Math.min(620, vh - 110);
-    setWinPos({
-      left: Math.max(10, (vw - w) / 2),
-      top: Math.max(10, (vh - h) / 2) - 15
-    });
-    setExpPos({
-      left: Math.max(20, (vw - Math.min(920, vw - 40)) / 2 + 30),
-      top: Math.max(20, (vh - Math.min(560, vh - 80)) / 2 - 20)
-    });
-    setAboutPos({ left: Math.max(20, (vw - 640) / 2 - 20), top: Math.max(20, (vh - 500) / 2 - 20) });
-    setSkillsPos({ left: Math.max(20, (vw - 640) / 2 + 10), top: Math.max(20, (vh - 510) / 2 - 10) });
-    setServersPos({ left: Math.max(20, (vw - 680) / 2 + 30), top: Math.max(20, (vh - 480) / 2) });
-    setFeaturedPos({ left: Math.max(20, (vw - 560) / 2 + 50), top: Math.max(20, (vh - 430) / 2 + 10) });
-    setContactPos({ left: Math.max(20, (vw - 540) / 2 + 70), top: Math.max(20, (vh - 420) / 2 + 20) });
+    function recalcPositions() {
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const isMob = vw <= 768;
+
+      if (isMob) {
+        setWinPos({ left: 0, top: 0 });
+        setWinSize({ width: vw, height: vh - 34 });
+        setExpPos({ left: 0, top: 0 });
+        setExpSize({ width: vw, height: vh - 34 });
+        setAboutPos({ left: 0, top: 0 });
+        setAboutSize({ width: vw, height: vh - 34 });
+        setSkillsPos({ left: 0, top: 0 });
+        setSkillsSize({ width: vw, height: vh - 34 });
+        setServersPos({ left: 0, top: 0 });
+        setServersSize({ width: vw, height: vh - 34 });
+        setFeaturedPos({ left: 0, top: 0 });
+        setFeaturedSize({ width: vw, height: vh - 34 });
+        setContactPos({ left: 0, top: 0 });
+        setContactSize({ width: vw, height: vh - 34 });
+      } else {
+        const w = Math.min(860, vw - 150);
+        const h = Math.min(620, vh - 110);
+        setWinSize({ width: w, height: h });
+        setWinPos({
+          left: Math.max(10, (vw - w) / 2),
+          top: Math.max(10, (vh - h) / 2) - 15,
+        });
+        setExpPos({
+          left: Math.max(20, (vw - Math.min(920, vw - 40)) / 2 + 30),
+          top: Math.max(20, (vh - Math.min(560, vh - 80)) / 2 - 20),
+        });
+        setExpSize({ width: Math.min(920, vw - 40), height: Math.min(560, vh - 80) });
+        setAboutPos({ left: Math.max(20, (vw - 640) / 2 - 20), top: Math.max(20, (vh - 500) / 2 - 20) });
+        setAboutSize({ width: Math.min(640, vw - 30), height: Math.min(500, vh - 80) });
+        setSkillsPos({ left: Math.max(20, (vw - 640) / 2 + 10), top: Math.max(20, (vh - 510) / 2 - 10) });
+        setSkillsSize({ width: Math.min(680, vw - 30), height: Math.min(540, vh - 80) });
+        setServersPos({ left: Math.max(20, (vw - 680) / 2 + 30), top: Math.max(20, (vh - 480) / 2) });
+        setServersSize({ width: Math.min(680, vw - 30), height: Math.min(480, vh - 80) });
+        setFeaturedPos({ left: Math.max(20, (vw - 560) / 2 + 50), top: Math.max(20, (vh - 430) / 2 + 10) });
+        setFeaturedSize({ width: Math.min(560, vw - 30), height: Math.min(430, vh - 80) });
+        setContactPos({ left: Math.max(20, (vw - 540) / 2 + 70), top: Math.max(20, (vh - 420) / 2 + 20) });
+        setContactSize({ width: Math.min(540, vw - 30), height: Math.min(420, vh - 80) });
+      }
+    }
+
+    recalcPositions();
+    window.addEventListener("resize", recalcPositions);
+    return () => window.removeEventListener("resize", recalcPositions);
   }, []);
   const savedRectRef = useRef<{ left: number; top: number; width: number; height: number } | null>(null);
   const [shutdownPhase, setShutdownPhase] = useState(0); // 0=none, 1=cascade, 2=hourglass, 3=done
@@ -1251,6 +1285,7 @@ export default function AlexOSPage() {
   const [selectedIcon, setSelectedIcon] = useState<number | null>(null);
 
   /* --- tweaks --- */
+  const [tweaksOpen, setTweaksOpen] = useState(false);
   const [phosphor, setPhosphor] = useState("#33ff66");
   const [background, setBackground] = useState("teal");
   const [intensity, setIntensity] = useState(55);
@@ -1550,14 +1585,15 @@ export default function AlexOSPage() {
     }
   }
 
-  /* ---------- unified window drag ---------- */
+  /* ---------- unified window drag (Mouse, Touch, Pen) ---------- */
   useEffect(() => {
-    function onMove(e: MouseEvent) {
+    function onMove(e: PointerEvent | MouseEvent) {
       if (!dragTargetRef.current) return;
+      if (window.innerWidth <= 768) return; // Fullscreen on mobile
       const { win, sx, sy, ox, oy } = dragTargetRef.current;
       let nx = ox + (e.clientX - sx);
       let ny = oy + (e.clientY - sy);
-      nx = Math.max(-800 + 80, Math.min(nx, window.innerWidth - 80));
+      nx = Math.max(-400, Math.min(nx, window.innerWidth - 80));
       ny = Math.max(0, Math.min(ny, window.innerHeight - 60));
       if (win === "term") setWinPos({ left: nx, top: ny });
       else if (win === "explorer") setExpPos({ left: nx, top: ny });
@@ -1571,17 +1607,20 @@ export default function AlexOSPage() {
       dragTargetRef.current = null;
       document.body.style.userSelect = "";
     }
-    window.addEventListener("mousemove", onMove);
-    window.addEventListener("mouseup", onUp);
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", onUp);
+    window.addEventListener("pointercancel", onUp);
     return () => {
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("mouseup", onUp);
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("pointercancel", onUp);
     };
   }, []);
 
-  function handleWinDragStart(win: string, e: ReactMouseEvent<HTMLDivElement>) {
+  function handleWinDragStart(win: string, e: React.PointerEvent<HTMLDivElement> | ReactMouseEvent<HTMLDivElement>) {
     setActiveWindow(win);
     if ((e.target as HTMLElement).closest(".tbtn")) return;
+    if (window.innerWidth <= 768) return;
     const el = (e.currentTarget.closest(".win") || e.currentTarget.closest(".gui-win")) as HTMLElement | null;
     if (!el) return;
     const r = el.getBoundingClientRect();
@@ -1629,6 +1668,7 @@ export default function AlexOSPage() {
     { label: "Featured In", cmd: "featured", ico: "/icons/featured-in-icon.png" },
     { label: "Contact", cmd: "contact", ico: "/icons/contact-icon.png" },
     { sep: true },
+    { label: "Settings & Theme", action: "tweaks", ico: "/icons/Settings.ico" },
     { label: "Clippy Assistant", action: "clippy", ico: "/icons/help-icon.png" },
     { label: "Run neofetch", cmd: "neofetch", ico: "/icons/neofetch-icon.png" },
     { label: "Help", cmd: "help", ico: "/icons/help-icon.png" },
@@ -1744,7 +1784,36 @@ export default function AlexOSPage() {
               className={`dicon${selectedIcon === i ? " sel" : ""}`}
               onClick={(e) => {
                 e.stopPropagation();
-                setSelectedIcon(i);
+                if (typeof window !== "undefined" && window.innerWidth <= 768) {
+                  setSelectedIcon(i);
+                  if (ic.cmd === "projects") openAppWindow("projects");
+                  else if (ic.cmd === "about") openAppWindow("about");
+                  else if (ic.cmd === "skills") openAppWindow("skills");
+                  else if (ic.cmd === "servers") openAppWindow("servers");
+                  else if (ic.cmd === "contact") openAppWindow("contact");
+                  else if (ic.label === "Terminal") openAppWindow("term");
+                  else {
+                    setMinimized(false);
+                    if (ic.cmd) runMacro(ic.cmd);
+                    else cmdInputRef.current?.focus();
+                  }
+                } else {
+                  if (selectedIcon === i) {
+                    if (ic.cmd === "projects") openAppWindow("projects");
+                    else if (ic.cmd === "about") openAppWindow("about");
+                    else if (ic.cmd === "skills") openAppWindow("skills");
+                    else if (ic.cmd === "servers") openAppWindow("servers");
+                    else if (ic.cmd === "contact") openAppWindow("contact");
+                    else if (ic.label === "Terminal") openAppWindow("term");
+                    else {
+                      setMinimized(false);
+                      if (ic.cmd) runMacro(ic.cmd);
+                      else cmdInputRef.current?.focus();
+                    }
+                  } else {
+                    setSelectedIcon(i);
+                  }
+                }
               }}
               onDoubleClick={() => {
                 if (ic.cmd === "projects") openAppWindow("projects");
@@ -1813,6 +1882,7 @@ export default function AlexOSPage() {
             {/* Title bar */}
             <div
               className={`titlebar${activeWindow === "term" ? "" : " inactive"}`}
+              onPointerDown={(e) => handleWinDragStart("term", e)}
               onMouseDown={(e) => handleWinDragStart("term", e)}
               onDoubleClick={(e) => {
                 if (!(e.target as HTMLElement).closest(".tbtn")) toggleMax();
@@ -1918,6 +1988,7 @@ export default function AlexOSPage() {
             {/* Explorer Titlebar */}
             <div
               className={`titlebar${activeWindow === "explorer" ? "" : " inactive"}`}
+              onPointerDown={(e) => handleWinDragStart("explorer", e)}
               onMouseDown={(e) => handleWinDragStart("explorer", e)}
               onDoubleClick={toggleExpMax}
             >
@@ -2502,6 +2573,7 @@ export default function AlexOSPage() {
           >
             <div
               className={`titlebar${activeWindow === "about" ? "" : " inactive"}`}
+              onPointerDown={(e) => handleWinDragStart("about", e)}
               onMouseDown={(e) => handleWinDragStart("about", e)}
               onDoubleClick={() => setAboutMax(!aboutMax)}
             >
@@ -2632,6 +2704,7 @@ export default function AlexOSPage() {
           >
             <div
               className={`titlebar${activeWindow === "skills" ? "" : " inactive"}`}
+              onPointerDown={(e) => handleWinDragStart("skills", e)}
               onMouseDown={(e) => handleWinDragStart("skills", e)}
               onDoubleClick={() => setSkillsMax(!skillsMax)}
             >
@@ -2699,7 +2772,7 @@ export default function AlexOSPage() {
                 </div>
               ) : (
                 <>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px 18px" }}>
+                  <div className="skills-grid-container">
                     {P.skills
                       .filter((sk) => {
                         if (skillsActiveTab === "Overview") return true;
@@ -2774,6 +2847,7 @@ export default function AlexOSPage() {
           >
             <div
               className={`titlebar${activeWindow === "servers" ? "" : " inactive"}`}
+              onPointerDown={(e) => handleWinDragStart("servers", e)}
               onMouseDown={(e) => handleWinDragStart("servers", e)}
               onDoubleClick={() => setServersMax(!serversMax)}
             >
@@ -2867,6 +2941,7 @@ export default function AlexOSPage() {
           >
             <div
               className={`titlebar${activeWindow === "featured" ? "" : " inactive"}`}
+              onPointerDown={(e) => handleWinDragStart("featured", e)}
               onMouseDown={(e) => handleWinDragStart("featured", e)}
               onDoubleClick={() => setFeaturedMax(!featuredMax)}
             >
@@ -2937,6 +3012,7 @@ export default function AlexOSPage() {
           >
             <div
               className={`titlebar${activeWindow === "contact" ? "" : " inactive"}`}
+              onPointerDown={(e) => handleWinDragStart("contact", e)}
               onMouseDown={(e) => handleWinDragStart("contact", e)}
               onDoubleClick={() => setContactMax(!contactMax)}
             >
@@ -3183,6 +3259,25 @@ export default function AlexOSPage() {
                 style={{ width: 16, height: 16, objectFit: "contain", imageRendering: "pixelated" }}
               />
             </span>
+            <span
+              className="ticon"
+              title="Display Settings / Theme"
+              onClick={() => setTweaksOpen(!tweaksOpen)}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                cursor: "pointer",
+                padding: "0 3px",
+                border: tweaksOpen ? "1px inset var(--w95-shadow)" : "1px solid transparent",
+                background: tweaksOpen ? "var(--w95-hilite)" : "transparent",
+              }}
+            >
+              <img
+                src="/icons/Settings.ico"
+                alt="Settings"
+                style={{ width: 16, height: 16, objectFit: "contain", imageRendering: "pixelated" }}
+              />
+            </span>
             <span className="ticon" title="sound" style={{ display: "flex", alignItems: "center" }}>
               <img src="/icons/sound-icon.png" alt="sound" style={{ width: 28, height: 28, objectFit: "contain", imageRendering: "pixelated" }} />
             </span>
@@ -3209,6 +3304,7 @@ export default function AlexOSPage() {
                     setStartOpen(false);
                     if (it.action === "shutdown") setShutdownPhase(1);
                     else if (it.action === "clippy") setClippyVisible(true);
+                    else if (it.action === "tweaks") setTweaksOpen(true);
                     else if (it.cmd === "projects" || it.label === "Projects") openAppWindow("projects");
                     else if (it.cmd === "about" || it.label === "About Me") openAppWindow("about");
                     else if (it.cmd === "skills" || it.label === "Tech Stack") openAppWindow("skills");
@@ -3256,6 +3352,8 @@ export default function AlexOSPage() {
       {/* ---- TWEAKS PANEL ---- */}
       {booted && (
         <TweaksPanel
+          open={tweaksOpen}
+          setOpen={setTweaksOpen}
           phosphor={phosphor}
           setPhosphor={setPhosphor}
           background={background}
@@ -3273,6 +3371,7 @@ export default function AlexOSPage() {
           booted={booted}
           openAppWindow={openAppWindow}
           runMacro={runMacro}
+          onOpenSettings={() => setTweaksOpen(true)}
           visible={clippyVisible}
           onToggleVisible={() => setClippyVisible((v) => !v)}
         />

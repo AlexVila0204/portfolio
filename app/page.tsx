@@ -9,7 +9,6 @@ import React, {
   type KeyboardEvent as ReactKeyboardEvent,
   type MouseEvent as ReactMouseEvent,
 } from "react";
-import ClippyAssistant from "./components/ClippyAssistant";
 
 /* ============================================================
    DATA — portfolio content
@@ -432,7 +431,7 @@ function iconFolder(c: string): string {
   return `<svg width="34" height="30" viewBox="0 0 34 30"><path d="M2 6h10l3 3h17v18a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6z" fill="${c}" stroke="#000" stroke-width="1"/><path d="M2 6h10l3 3h17" fill="none" stroke="#000" stroke-width="1"/><rect x="2" y="9" width="30" height="2" fill="#000" opacity="0.15"/></svg>`;
 }
 function iconFile(): string {
-  return `<svg width="30" height="32" viewBox="0 0 30 32"><path d="M3 1h18l6 6v24H3z" fill="#fff" stroke="#000"/><path d="M21 1v6h6" fill="#ccc" stroke="#000"/><line x1="7" y1="13" x2="23" y2="13" stroke="#444"/><line x1="7" y1="17" x2="23" y2="17" stroke="#444"/><line x1="7" y1="21" x2="19" y2="21" stroke="#444"/></svg>`;
+  return `<svg width="34" height="34" viewBox="0 0 30 32" preserveAspectRatio="xMidYMid meet"><path d="M3 1h18l6 6v24H3z" fill="#fff" stroke="#000"/><path d="M21 1v6h6" fill="#ccc" stroke="#000"/><line x1="7" y1="13" x2="23" y2="13" stroke="#444"/><line x1="7" y1="17" x2="23" y2="17" stroke="#444"/><line x1="7" y1="21" x2="19" y2="21" stroke="#444"/></svg>`;
 }
 function iconTerminal(): string {
   return `<svg width="32" height="28" viewBox="0 0 32 28"><rect x="1" y="1" width="30" height="26" fill="#000" stroke="#fff"/><rect x="1" y="1" width="30" height="5" fill="#0a2a8c"/><text x="4" y="18" font-family="monospace" font-size="11" fill="#33ff66">&gt;_</text></svg>`;
@@ -525,6 +524,7 @@ function ProjectMedia({
   className,
   onClick,
   zoomable = true,
+  fit = "cover",
 }: {
   src: string;
   alt?: string;
@@ -532,6 +532,7 @@ function ProjectMedia({
   className?: string;
   onClick?: (e: React.MouseEvent) => void;
   zoomable?: boolean;
+  fit?: "cover" | "contain";
 }) {
   const isVideo = src.endsWith(".mp4") || src.endsWith(".webm") || src.endsWith(".mov");
   const baseClass = `${className || ""} ${zoomable ? "media-zoomable" : ""}`.trim();
@@ -549,7 +550,7 @@ function ProjectMedia({
         style={{
           width: "100%",
           height: "100%",
-          objectFit: "cover",
+          objectFit: fit,
           display: "block",
           cursor: zoomable ? "zoom-in" : undefined,
           ...style,
@@ -568,7 +569,7 @@ function ProjectMedia({
       style={{
         width: "100%",
         height: "100%",
-        objectFit: "cover",
+        objectFit: fit,
         display: "block",
         cursor: zoomable ? "zoom-in" : undefined,
         ...style,
@@ -1104,7 +1105,6 @@ export default function AlexOSPage() {
   const bootDoneRef = useRef(false);
 
   /* --- window state: terminal --- */
-  const [clippyVisible, setClippyVisible] = useState(true);
   const [termOpen, setTermOpen] = useState(false);
   const [minimized, setMinimized] = useState(false);
   const [maximized, setMaximized] = useState(false);
@@ -1669,7 +1669,6 @@ export default function AlexOSPage() {
     { label: "Contact", cmd: "contact", ico: "/icons/contact-icon.png" },
     { sep: true },
     { label: "Settings & Theme", action: "tweaks", ico: "/icons/Settings.ico" },
-    { label: "Clippy Assistant", action: "clippy", ico: "/icons/help-icon.png" },
     { label: "Run neofetch", cmd: "neofetch", ico: "/icons/neofetch-icon.png" },
     { label: "Help", cmd: "help", ico: "/icons/help-icon.png" },
     { sep: true },
@@ -1837,14 +1836,12 @@ export default function AlexOSPage() {
                       alt=""
                       draggable={false}
                       className="icon-default"
-                      style={{ width: 34, height: 34, objectFit: "contain", imageRendering: "pixelated" }}
                     />
                     <img
                       src={ic.icoHover}
                       alt=""
                       draggable={false}
                       className="icon-hover"
-                      style={{ width: 34, height: 34, objectFit: "contain", imageRendering: "pixelated" }}
                     />
                   </>
                 ) : ic.ico ? (
@@ -1852,7 +1849,6 @@ export default function AlexOSPage() {
                     src={ic.ico}
                     alt=""
                     draggable={false}
-                    style={{ width: 34, height: 34, objectFit: "contain", imageRendering: "pixelated" }}
                   />
                 ) : ic.svg ? (
                   <span dangerouslySetInnerHTML={{ __html: ic.svg }} />
@@ -2201,7 +2197,7 @@ export default function AlexOSPage() {
                         <>
                           <div className="exp-big-preview">
                             {p.image ? (
-                              <ProjectMedia src={p.image} alt={p.name} zoomable={false} />
+                              <ProjectMedia src={p.image} alt={p.name} zoomable={false} fit="contain" />
                             ) : (
                               <div className="exp-placeholder" style={{ fontSize: 13 }}>
                                 <div>▣ {p.lang} · {p.stack[0] || ""}</div>
@@ -2402,7 +2398,7 @@ export default function AlexOSPage() {
                   {propsActiveTab === "General" && (
                     <>
                       <div style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
-                        <div style={{ width: 140, height: 96, flex: "none", border: "2px solid", borderColor: "var(--w95-shadow) var(--w95-light) var(--w95-light) var(--w95-shadow)", overflow: "hidden", background: "#04130a" }}>
+                        <div className="props-thumb">
                           {p.image ? (
                             <ProjectMedia src={p.image} alt={p.name} zoomable={false} />
                           ) : (
@@ -2512,27 +2508,28 @@ export default function AlexOSPage() {
                     <>
                       <div style={{ fontWeight: 700, fontSize: 12, color: "#000" }}>Gallery & Showcase Media:</div>
                       {p.media && p.media.length > 0 ? (
-                        <div style={{ display: "grid", gridTemplateColumns: p.media.length === 1 ? "1fr" : "repeat(3, 1fr)", gap: 8, margin: "6px 0" }}>
+                        <div className="media-grid">
                           {p.media.map((m, idx) => (
-                            <div
-                              key={idx}
-                              style={{ border: "2px solid", borderColor: "var(--w95-shadow) var(--w95-light) var(--w95-light) var(--w95-shadow)", overflow: "hidden", height: p.media && p.media.length === 1 ? 160 : 100, background: "#000" }}
-                            >
+                            <div key={idx} className="media-tile">
                               <ProjectMedia
                                 src={m.url}
                                 alt={m.title}
+                                fit="contain"
                                 onClick={() => openLightbox(p.media, idx)}
                               />
                             </div>
                           ))}
                         </div>
                       ) : p.image ? (
-                        <div style={{ border: "2px solid", borderColor: "var(--w95-shadow) var(--w95-light) var(--w95-light) var(--w95-shadow)", overflow: "hidden", height: 140, background: "#000" }}>
-                          <ProjectMedia
-                            src={p.image}
-                            alt={p.name}
-                            onClick={() => openLightbox([{ url: p.image!, title: p.name }], 0)}
-                          />
+                        <div className="media-grid">
+                          <div className="media-tile">
+                            <ProjectMedia
+                              src={p.image}
+                              alt={p.name}
+                              fit="contain"
+                              onClick={() => openLightbox([{ url: p.image!, title: p.name }], 0)}
+                            />
+                          </div>
                         </div>
                       ) : (
                         <div className="exp-placeholder" style={{ height: 120 }}>
@@ -3242,25 +3239,6 @@ export default function AlexOSPage() {
           <div className="tray">
             <span
               className="ticon"
-              title={clippyVisible ? "Hide Clippy Assistant" : "Show Clippy Assistant"}
-              onClick={() => setClippyVisible(!clippyVisible)}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                cursor: "pointer",
-                padding: "0 3px",
-                border: clippyVisible ? "1px inset var(--w95-shadow)" : "1px solid transparent",
-                background: clippyVisible ? "var(--w95-hilite)" : "transparent",
-              }}
-            >
-              <img
-                src="/icons/help-icon.png"
-                alt="Clippy"
-                style={{ width: 16, height: 16, objectFit: "contain", imageRendering: "pixelated" }}
-              />
-            </span>
-            <span
-              className="ticon"
               title="Display Settings / Theme"
               onClick={() => setTweaksOpen(!tweaksOpen)}
               style={{
@@ -3272,14 +3250,10 @@ export default function AlexOSPage() {
                 background: tweaksOpen ? "var(--w95-hilite)" : "transparent",
               }}
             >
-              <img
-                src="/icons/Settings.ico"
-                alt="Settings"
-                style={{ width: 16, height: 16, objectFit: "contain", imageRendering: "pixelated" }}
-              />
+              <img src="/icons/Settings.ico" alt="Settings" draggable={false} />
             </span>
             <span className="ticon" title="sound" style={{ display: "flex", alignItems: "center" }}>
-              <img src="/icons/sound-icon.png" alt="sound" style={{ width: 28, height: 28, objectFit: "contain", imageRendering: "pixelated" }} />
+              <img src="/icons/sound-icon.png" alt="sound" draggable={false} />
             </span>
             <span>{clock}</span>
           </div>
@@ -3303,7 +3277,6 @@ export default function AlexOSPage() {
                   onClick={() => {
                     setStartOpen(false);
                     if (it.action === "shutdown") setShutdownPhase(1);
-                    else if (it.action === "clippy") setClippyVisible(true);
                     else if (it.action === "tweaks") setTweaksOpen(true);
                     else if (it.cmd === "projects" || it.label === "Projects") openAppWindow("projects");
                     else if (it.cmd === "about" || it.label === "About Me") openAppWindow("about");
@@ -3322,14 +3295,12 @@ export default function AlexOSPage() {
                           alt=""
                           draggable={false}
                           className="icon-default"
-                          style={{ width: 28, height: 28, objectFit: "contain", verticalAlign: "middle", imageRendering: "pixelated" }}
                         />
                         <img
                           src={it.icoHover}
                           alt=""
                           draggable={false}
                           className="icon-hover"
-                          style={{ width: 28, height: 28, objectFit: "contain", verticalAlign: "middle", imageRendering: "pixelated" }}
                         />
                       </>
                     ) : it.ico ? (
@@ -3337,7 +3308,6 @@ export default function AlexOSPage() {
                         src={it.ico}
                         alt=""
                         draggable={false}
-                        style={{ width: 28, height: 28, objectFit: "contain", verticalAlign: "middle" }}
                       />
                     ) : null}
                   </span>
@@ -3364,19 +3334,6 @@ export default function AlexOSPage() {
           setTypingSpeed={setTypingSpeed}
         />
       )}
-
-      {/* ---- CLIPPY ASSISTANT ---- */}
-      {booted && (
-        <ClippyAssistant
-          booted={booted}
-          openAppWindow={openAppWindow}
-          runMacro={runMacro}
-          onOpenSettings={() => setTweaksOpen(true)}
-          visible={clippyVisible}
-          onToggleVisible={() => setClippyVisible((v) => !v)}
-        />
-      )}
-
 
       {/* ============ MEDIA LIGHTBOX / ZOOM VIEWER ============ */}
       {lightboxData && lightboxData.list[lightboxData.index] && (

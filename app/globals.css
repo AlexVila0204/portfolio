@@ -478,7 +478,7 @@ body {
 }
 
 .exp-thumb {
-  height: 118px;
+  aspect-ratio: 4 / 3;
   border: 2px solid;
   border-color: var(--w95-shadow) var(--w95-light) var(--w95-light) var(--w95-shadow);
   overflow: hidden;
@@ -489,7 +489,8 @@ body {
   position: relative;
 }
 
-.exp-thumb img {
+.exp-thumb img,
+.exp-thumb video {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -623,10 +624,11 @@ body {
   flex-shrink: 0;
 }
 
-.exp-big-preview img {
+.exp-big-preview img,
+.exp-big-preview video {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   display: block;
 }
 
@@ -1073,10 +1075,6 @@ html, body {
     padding: 8px !important;
   }
 
-  .exp-thumb {
-    height: 96px !important;
-  }
-
   .exp-split {
     flex-direction: column !important;
     height: 100% !important;
@@ -1215,196 +1213,6 @@ html, body {
     background: rgba(0,0,0,0.7) !important;
     border: 1px solid var(--phosphor-dim) !important;
   }
-}
-
-/* ============================================================
-   CLIPPY ASSISTANT & SPEECH BALLOON
-   ============================================================ */
-.clippy-container {
-  pointer-events: auto;
-}
-
-.clippy-sprite {
-  image-rendering: pixelated;
-  transition: transform 0.1s ease;
-}
-.clippy-sprite:hover {
-  filter: drop-shadow(0 0 6px rgba(255, 255, 200, 0.6)) drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.45)) !important;
-}
-.clippy-sprite:active {
-  cursor: grabbing !important;
-}
-
-.clippy-balloon {
-  position: absolute;
-  background: #ffffdc;
-  color: #000000;
-  border: 1px solid #000000;
-  border-radius: 4px;
-  box-shadow: 2px 3px 8px rgba(0, 0, 0, 0.4);
-  padding: 8px 10px;
-  width: 320px;
-  max-width: calc(100vw - 32px);
-  font-family: var(--font-ui), Tahoma, sans-serif;
-  font-size: 12px;
-  z-index: 8600;
-}
-
-/* Balloon positioning relative to sprite */
-.clippy-top-left {
-  bottom: calc(100% + 14px);
-  right: 0;
-}
-.clippy-top-right {
-  bottom: calc(100% + 14px);
-  left: 0;
-}
-.clippy-bottom-left {
-  top: calc(100% + 14px);
-  right: 0;
-}
-.clippy-bottom-right {
-  top: calc(100% + 14px);
-  left: 0;
-}
-
-/* Balloon Arrow Tip */
-.clippy-tip {
-  position: absolute;
-  width: 14px;
-  height: 14px;
-  background: #ffffdc;
-}
-
-.clippy-top-left .clippy-tip {
-  bottom: -7px;
-  right: 36px;
-  border-bottom: 1px solid #000000;
-  border-right: 1px solid #000000;
-  transform: rotate(45deg);
-}
-
-.clippy-top-right .clippy-tip {
-  bottom: -7px;
-  left: 36px;
-  border-bottom: 1px solid #000000;
-  border-left: 1px solid #000000;
-  transform: rotate(-45deg);
-}
-
-.clippy-bottom-left .clippy-tip {
-  top: -7px;
-  right: 36px;
-  border-top: 1px solid #000000;
-  border-right: 1px solid #000000;
-  transform: rotate(-45deg);
-}
-
-.clippy-bottom-right .clippy-tip {
-  top: -7px;
-  left: 36px;
-  border-top: 1px solid #000000;
-  border-left: 1px solid #000000;
-  transform: rotate(45deg);
-}
-
-.clippy-balloon-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid #d4cca6;
-  padding-bottom: 5px;
-  margin-bottom: 7px;
-}
-
-.clippy-title {
-  font-weight: bold;
-  font-size: 11.5px;
-  color: #333333;
-}
-
-.clippy-controls {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.clippy-btn-icon {
-  background: none;
-  border: 1px solid transparent;
-  cursor: pointer;
-  padding: 1px 3px;
-  border-radius: 2px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.clippy-btn-icon:hover {
-  background: #efe8c0;
-  border-color: #999;
-}
-
-.clippy-content {
-  line-height: 1.4;
-  font-size: 12px;
-  color: #111111;
-}
-
-.clippy-suggestions {
-  margin-top: 8px;
-  border-top: 1px dashed #d4cca6;
-  padding-top: 6px;
-}
-
-.clippy-suggestions-title {
-  font-size: 10.5px;
-  font-weight: bold;
-  color: #665c3b;
-  margin-bottom: 5px;
-}
-
-.clippy-chips-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  max-height: 220px;
-  overflow-y: auto;
-  padding-right: 2px;
-}
-
-.clippy-chip {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: #ffffff;
-  border: 1px solid #c4b88a;
-  border-radius: 3px;
-  padding: 4px 8px;
-  text-align: left;
-  cursor: pointer;
-  font-family: var(--font-ui), Tahoma, sans-serif;
-  font-size: 11.5px;
-  color: #000000;
-  transition: all 0.1s ease;
-  min-height: 32px;
-}
-
-.clippy-chip:hover {
-  background: #000080;
-  color: #ffffff;
-  border-color: #000080;
-}
-
-.clippy-chip:active {
-  transform: translateY(1px);
-}
-
-.clippy-chip .chip-txt {
-  flex: 1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-weight: 500;
 }
 
 /* ============ LIGHTBOX / MEDIA VIEWER ============ */
@@ -1551,3 +1359,103 @@ html, body {
   to { transform: scale(0.92); opacity: 0; }
 }
 
+
+/* ============================================================
+   UNIFORM IMAGE SIZING
+   Icon boxes own the dimensions; the <img> just fills them, so
+   one CSS override per breakpoint keeps every icon the same size.
+   ============================================================ */
+.dicon .ico img,
+.dicon .ico svg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.smitem .smico {
+  width: 28px;
+  height: 28px;
+  flex: none;
+}
+
+.smitem .smico img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.tray .ticon img {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  display: block;
+  image-rendering: pixelated;
+}
+
+/* .ico art runs edge-to-edge while the cropped PNGs keep a ~4% margin.
+   Inset the .ico files so both read at the same optical size. */
+.smitem .smico img[src$=".ico"] {
+  width: 93%;
+  height: 93%;
+}
+
+.tray .ticon img[src$=".ico"] {
+  width: 15px;
+  height: 15px;
+}
+
+/* Project gallery tiles — identical shape whatever the source aspect ratio */
+.media-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 8px;
+  margin: 6px 0;
+}
+
+.media-tile {
+  aspect-ratio: 4 / 3;
+  border: 2px solid;
+  border-color: var(--w95-shadow) var(--w95-light) var(--w95-light) var(--w95-shadow);
+  overflow: hidden;
+  background: #000;
+}
+
+.media-tile img,
+.media-tile video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* Properties dialog "General" tab thumbnail */
+.props-thumb {
+  width: 140px;
+  aspect-ratio: 4 / 3;
+  flex: none;
+  border: 2px solid;
+  border-color: var(--w95-shadow) var(--w95-light) var(--w95-light) var(--w95-shadow);
+  overflow: hidden;
+  background: #04130a;
+}
+
+.props-thumb img,
+.props-thumb video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .media-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)) !important;
+    gap: 6px !important;
+  }
+
+  .props-thumb {
+    width: 110px !important;
+  }
+}

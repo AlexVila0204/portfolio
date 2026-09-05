@@ -58,8 +58,7 @@ Feel free to reach out via [Email](mailto:vilatrix.codecrafter@gmail.com) or con
 
 ## 📜 Credits & Acknowledgments
 
-- **Clippy.js**: Built using [clippy.js](https://github.com/smore-inc/clippy.js) by Fireplace, Inc. (MIT License).
-- **Trademarks**: Clippy character assets, animations, and sound effects are intellectual property and trademarks of Microsoft Corporation. Used solely for non-commercial, personal portfolio demonstration purposes.
+- **Trademarks**: Windows 95 visual style references are used solely for non-commercial, personal portfolio demonstration purposes. All related marks are property of Microsoft Corporation.
 
 ---
 *Crafted with ☕ & Java | Alberth Alexander Godoy Avila (AlexVila04)*

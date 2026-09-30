@@ -13,15 +13,15 @@
   --scan-opacity: 0.22;
   --glow: 0.9;
 
-  /* win95 chrome */
+  /* win95/98 chrome */
   --w95-face: #c3c3c3;
   --w95-face-2: #bdbdbd;
   --w95-light: #ffffff;
   --w95-hilite: #dfdfdf;
   --w95-shadow: #808080;
   --w95-dark: #000000;
-  --w95-title-a: #0a2a8c;
-  --w95-title-b: #2563d6;
+  --w95-title-a: #000080;
+  --w95-title-b: #a6caf0;
   --w95-title-text: #ffffff;
   --font-term: 'JetBrains Mono', ui-monospace, 'Courier New', monospace;
   --font-ui: Tahoma, 'Segoe UI', Geneva, Verdana, sans-serif;
@@ -109,7 +109,7 @@ body {
   padding: 3px 3px 3px 5px; margin: 2px; cursor: move;
   background: linear-gradient(90deg, var(--w95-title-a), var(--w95-title-b));
   color: var(--w95-title-text); font-family: var(--font-ui); font-weight: 700; font-size: 12.5px;
-  text-shadow: 1px 1px 0 rgba(0,0,0,0.35);
+  text-shadow: none;
 }
 .titlebar.inactive { background: linear-gradient(90deg,#7b7b7b,#a9a9a9); }
 .titlebar .tb-left { display: flex; align-items: center; gap: 6px; overflow: hidden; white-space: nowrap; }
@@ -781,7 +781,7 @@ body {
 
 .w95-meter-fill {
   height: 100%;
-  background: linear-gradient(90deg, #0a2a8c, #2563d6);
+  background: linear-gradient(90deg, var(--w95-title-a), var(--w95-title-b));
 }
 
 .w95-card {

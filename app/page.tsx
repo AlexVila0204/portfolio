@@ -373,7 +373,7 @@ const PHOSPHORS: Record<string, { name: string; phosphor: string; bright: string
   "#45e0ff": { name: "cyan", phosphor: "#45e0ff", bright: "#c4f6ff", dim: "#1f8aa0", faint: "#07343d", term: "#02121a" },
   "#e6f0e6": { name: "mono", phosphor: "#e6f0e6", bright: "#ffffff", dim: "#9aa79a", faint: "#3a423a", term: "#0a0c0a" },
 };
-const BG_OPTIONS: Record<string, string> = { teal: "#018184", black: "#05080a" };
+const BG_OPTIONS: Record<string, string> = { teal: "#018184", blue: "#3a6ea5", black: "#05080a" };
 
 function applyTweaks(phosphor: string, background: string, intensity: number) {
   const root = document.documentElement.style;
@@ -434,7 +434,7 @@ function iconFile(): string {
   return `<svg width="34" height="34" viewBox="0 0 30 32" preserveAspectRatio="xMidYMid meet"><path d="M3 1h18l6 6v24H3z" fill="#fff" stroke="#000"/><path d="M21 1v6h6" fill="#ccc" stroke="#000"/><line x1="7" y1="13" x2="23" y2="13" stroke="#444"/><line x1="7" y1="17" x2="23" y2="17" stroke="#444"/><line x1="7" y1="21" x2="19" y2="21" stroke="#444"/></svg>`;
 }
 function iconTerminal(): string {
-  return `<svg width="32" height="28" viewBox="0 0 32 28"><rect x="1" y="1" width="30" height="26" fill="#000" stroke="#fff"/><rect x="1" y="1" width="30" height="5" fill="#0a2a8c"/><text x="4" y="18" font-family="monospace" font-size="11" fill="#33ff66">&gt;_</text></svg>`;
+  return `<svg width="32" height="28" viewBox="0 0 32 28"><rect x="1" y="1" width="30" height="26" fill="#000" stroke="#fff"/><rect x="1" y="1" width="30" height="5" fill="#000080"/><text x="4" y="18" font-family="monospace" font-size="11" fill="#33ff66">&gt;_</text></svg>`;
 }
 
 function HondurasFlag({ width = 18, height = 12 }: { width?: number; height?: number }) {
@@ -484,7 +484,7 @@ function GlobeIcon({ width = 15, height = 15 }: { width?: number; height?: numbe
       height={height}
       viewBox="0 0 24 24"
       fill="none"
-      stroke="#0a2a8c"
+      stroke="#000080"
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -1419,7 +1419,6 @@ export default function AlexOSPage() {
   function finishBoot() {
     if (bootDoneRef.current) return;
     bootDoneRef.current = true;
-    new Audio("/sounds/win95-startup.ogv").play().catch(() => {});
     setBiosFading(true);
     setTimeout(() => {
       setBiosVisible(false);
@@ -2480,7 +2479,7 @@ export default function AlexOSPage() {
                               href={lk.url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: "#0a2a8c" }}
+                              style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: "#000080" }}
                             >
                               <GlobeIcon width={15} height={15} />
                               <span style={{ textDecoration: "underline", fontWeight: 700 }}>{lk.label}:</span>
@@ -2742,7 +2741,7 @@ export default function AlexOSPage() {
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 4 }}>
                         <div>
                           <span style={{ fontSize: 14, fontWeight: 700, color: "#000" }}>{exp.role}</span>
-                          <span style={{ fontSize: 13, fontWeight: 700, color: "#0a2a8c", marginLeft: 6 }}>@ {exp.company}</span>
+                          <span style={{ fontSize: 13, fontWeight: 700, color: "#000080", marginLeft: 6 }}>@ {exp.company}</span>
                         </div>
                         <span style={{ fontSize: 11, padding: "2px 6px", background: exp.badge === "Current" ? "#33ff66" : "#dfdfdf", color: "#000", fontWeight: 700, border: "1px solid #808080" }}>
                           {exp.period}
@@ -2882,7 +2881,7 @@ export default function AlexOSPage() {
                       {srv.meta}
                     </span>
                   </div>
-                  <div style={{ fontSize: 12, color: "#0a2a8c", fontWeight: 700 }}>
+                  <div style={{ fontSize: 12, color: "#000080", fontWeight: 700 }}>
                     {srv.role}
                   </div>
                   <p style={{ margin: "2px 0 0", fontSize: 12, lineHeight: 1.5, color: "#000" }}>

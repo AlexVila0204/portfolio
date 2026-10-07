@@ -19,7 +19,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "AlexOS",
   description:
-    "Alberth Alexander Godoy Avila — Backend developer & Minecraft plugin developer. Windows 95-themed terminal portfolio.",
+    "Alberth Alexander Godoy Avila — Backend developer & Minecraft plugin developer. Windows 98-themed portfolio.",
   icons: {
     icon: "/own-profile.jpg",
   },

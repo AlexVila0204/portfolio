@@ -739,7 +739,10 @@ export function ContactBody() {
         </div>
         <div style={{ ...row, borderBottom: 0 }}>
           <b style={key}>Discord</b>
-          <span style={{ ...val, color: "#606060" }}>available on request</span>
+          <span style={val}>discord.gg/cvc5CH2t7</span>
+          <a href="https://discord.gg/cvc5CH2t7" {...ext} style={small}>
+            Open ↗
+          </a>
         </div>
       </div>
       <div style={{ display: "flex", justifyContent: "flex-end", gap: 6, marginTop: "auto" }}>
@@ -766,7 +769,7 @@ WHAT I DO
 START HERE
 - Projects/  -> 3 featured case studies
 - Servers/   -> EternalMC, SolrynMC, PvP-Society
-- Contact/   -> email, GitHub, LinkedIn
+- Contact/   -> email, GitHub, LinkedIn, Discord
 
 ${EMAIL}`;
 

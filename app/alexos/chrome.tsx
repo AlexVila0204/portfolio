@@ -9,7 +9,7 @@ export const SUNKEN = "inset -1px -1px #fff,inset 1px 1px #000,inset -2px -2px #
 export const DEFAULT_RAISED = `0 0 0 1px #000,${RAISED}`;
 export const FRAME = "inset -1px -1px #000,inset 1px 1px #dfdfdf,inset -2px -2px #808080,inset 2px 2px #fff";
 export const FIELD = "inset -1px -1px #fff,inset 1px 1px #808080,inset -2px -2px #dfdfdf,inset 2px 2px #000";
-export const GROOVE = "inset -1px -1px #fff,inset 1px 1px #808080,inset -2px -2px #808080,inset 2px 2px #fff";
+export const GROOVE: CSSProperties = { border: "1px solid #808080", boxShadow: "inset 1px 1px #fff,1px 1px #fff" };
 export const STATUS = "inset -1px -1px #fff,inset 1px 1px #808080";
 export const HEADER_CELL = "inset -1px -1px #000,inset 1px 1px #fff,inset -2px -2px #808080";
 

@@ -311,8 +311,8 @@ type PropTab = "overview" | "gallery";
 
 function Fieldset({ legend, children }: { legend: string; children: ReactNode }) {
   return (
-    <fieldset style={{ margin: 0, padding: "10px 12px 12px", border: 0, boxShadow: GROOVE }}>
-      <legend style={{ padding: "0 4px", font: font(400, 12.5, 1) }}>{legend}</legend>
+    <fieldset style={{ margin: 0, padding: "6px 12px 12px", ...GROOVE }}>
+      <legend style={{ padding: "0 4px", marginLeft: 4, background: "#c3c3c3", font: font(400, 12.5, 1) }}>{legend}</legend>
       {children}
     </fieldset>
   );

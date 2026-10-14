@@ -1,6 +1,6 @@
 export type WinId = "welcome" | "projects" | "props" | "about" | "servers" | "stack" | "contact" | "readme" | "terminal";
 export type DeskId = "terminal" | "projects" | "servers" | "stack" | "about" | "readme" | "contact";
-export type Cat = "plugins" | "servers" | "web" | "opensource" | "university";
+export type Cat = "plugins" | "mods" | "servers" | "web" | "opensource" | "university";
 
 export type GalleryItem = { url: string; title: string };
 
@@ -69,11 +69,13 @@ export const ROLE_BG: Record<string, string> = {
   "Full Stack": "#d8d8f0",
   University: "#e4e4e4",
   SolrynMC: "#c9e8c9",
+  Creator: "#c2e7ff",
 };
 
 export const CATS: [Cat | "all", string][] = [
   ["all", "All types"],
   ["plugins", "Plugins"],
+  ["mods", "Mods"],
   ["servers", "Server work"],
   ["web", "Web"],
   ["opensource", "Open source"],
@@ -82,6 +84,51 @@ export const CATS: [Cat | "all", string][] = [
 export const CAT_LABEL = Object.fromEntries(CATS.slice(1)) as Record<Cat, string>;
 
 export const PROJECTS: Project[] = [
+  {
+    id: "boardcraft",
+    name: "BoardCraft",
+    role: "Creator",
+    lang: "Java",
+    cats: ["plugins"],
+    featured: true,
+    pixel: true,
+    image: "/showcase_boardcraft/mob-duel-02.mp4",
+    alt: "BoardCraft tabletop and card games on Minecraft HUD",
+    line: "Tabletop and card games (Chess, Minecards, Mob Duel) rendered in vanilla HUD without client mods.",
+    stack: ["Java", "Paper API", "Custom HUD", "Resource Pack"],
+    problem: "Board and card games on Minecraft servers usually need client mods or rely on chest GUIs.",
+    solution:
+      "Games are drawn on the HUD with a vanilla resource pack the server sends automatically, controlled with WASD, Space, Shift and F. Chess has full rules, legal move highlights, check and checkmate, promotion and player stats. Minecards is UNO-style for up to 6 players with stackable +2 and +4. Mob Duel is a 1v1 card duel with 23 mobs, 32 item cards, attack vs defense rolls, poison, stun and lifesteal.",
+    result: "Runs on the vanilla client. Players don't install anything.",
+    links: [],
+    gallery: [
+      { url: "/showcase_boardcraft/mob-duel-02.mp4", title: "Mob Duel — Attack Roll & Mob Combat Mechanic" },
+      { url: "/showcase_boardcraft/mob-duel-01.mp4", title: "Mob Duel — Card Selection & Table Placement" },
+      { url: "/showcase_boardcraft/chess-01-movimiento.mp4", title: "Chess — Legal Moves & Piece Movement on HUD" },
+      { url: "/showcase_boardcraft/minecard-01-partida.mp4", title: "Minecards — Multiplayer Card Game Match" },
+      { url: "/showcase_boardcraft/minecard-02-jugada.mp4", title: "Minecards — Card Stacking & Active Gameplay" },
+    ],
+  },
+  {
+    id: "dramaland-casino",
+    name: "Dramaland Casino",
+    role: "Client Work",
+    lang: "Java",
+    cats: ["mods"],
+    featured: true,
+    image: "/showcase_casino/mod-01-casino-a.mp4",
+    alt: "Server-controlled casino machines and betting games in Minecraft",
+    line: "NeoForge mod with four server-controlled casino machines: slots, roulette, blackjack and a horse race derby.",
+    stack: ["Java", "NeoForge", "Server-Side Logic", "In-Game Config"],
+    problem: "A client wanted casino games on their server that admins could tune without editing config files.",
+    solution:
+      "Four server-controlled machines: slots, roulette, blackjack and derby. Each machine accepts a fixed coin, and admins edit prizes and payouts from an in-game menu.",
+    links: [],
+    gallery: [
+      { url: "/showcase_casino/mod-01-casino-a.mp4", title: "Casino Machines — Part A" },
+      { url: "/showcase_casino/mod-02-casino-b.mp4", title: "Casino Machines — Part B" },
+    ],
+  },
   {
     id: "hgn-recipediscovery",
     name: "HGN-RecipeDiscovery",
@@ -261,8 +308,9 @@ export const STACK: Record<StackTab, { label: string; rows: [string, string][] }
   minecraft: {
     label: "Minecraft",
     rows: [
-      ["Spigot / Paper API", "Transport-Pipes, RecipeDiscovery, SolrynMC plugins"],
-      ["Kotlin · Java", "All plugins"],
+      ["Spigot / Paper API", "BoardCraft, Transport-Pipes, RecipeDiscovery, SolrynMC plugins"],
+      ["NeoForge / Mods", "Dramaland Casino"],
+      ["Kotlin · Java", "All plugins & mods"],
       ["Server optimization", "PvP-Society, EternalMC"],
       ["Velocity", "Minecraft server networks"],
     ],

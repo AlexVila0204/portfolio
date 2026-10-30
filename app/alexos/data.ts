@@ -287,6 +287,10 @@ export const STACK: Record<StackTab, { label: string; rows: [string, string][] }
   web: {
     label: "Web & Mobile",
     rows: [
+      ["Kotlin Multiplatform · Compose", "RedAbierta — Factured Mobile (iOS, Android, Sunmi)"],
+      ["Ktor · Koin · Coroutines", "RedAbierta — Factured Mobile"],
+      ["CameraX · ML Kit", "RedAbierta — barcode scanning"],
+      ["fastlane · TestFlight", "RedAbierta — iOS and Android releases"],
       ["React Native", "RedAbierta — iOS / Android apps"],
       ["React · Next.js", "This portfolio, freelance web apps"],
       ["JavaScript · TypeScript", "Redmine Ticket System, freelance"],

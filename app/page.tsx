@@ -319,7 +319,7 @@ export default function Home() {
         out = HELP.map((t) => ({ t }));
         break;
       case "whoami":
-        out = [{ t: "Alberth Godoy — Software Engineer @ RedAbierta S.A." }, { t: "Payments backends (Go, gRPC, ISO 8583) + Minecraft plugins." }];
+        out = [{ t: "Alberth Godoy — Software Engineer @ RedAbierta S.A." }, { t: "Kotlin Multiplatform apps, payment backends (Go, ISO 8583) and Minecraft plugins." }];
         break;
       case "projects":
       case "ls":

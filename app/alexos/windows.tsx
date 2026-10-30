@@ -49,8 +49,8 @@ export function WelcomeBody(props: {
           <div style={{ flex: 1, background: "#ffffe1", padding: "14px 16px", display: "flex", flexDirection: "column", gap: 10, boxShadow: FIELD }}>
             <div style={{ font: font(700, 13, 1.3) }}>Hi, I&apos;m Alberth Godoy.</div>
             <p style={{ margin: 0, font: font(400, 13.5, 1.55), textWrap: "pretty" }}>
-              I&apos;m a software engineer at RedAbierta, building payment systems (Go, gRPC, ISO 8583). I also write Minecraft plugins and run
-              servers on Paper, Spigot and Velocity.
+              I&apos;m a full stack developer at RedAbierta. I build cross-platform mobile apps in Kotlin Multiplatform and payment backends in Go.
+              I also write Minecraft plugins and run servers on Paper, Spigot and Velocity.
             </p>
             <p style={{ margin: 0, font: font(400, 12.5, 1.5), color: "#404040" }}>
               <b>Tip:</b> double-click any desktop icon to open it, or start with my best work below.
@@ -527,7 +527,11 @@ const panel: CSSProperties = { flex: 1, minHeight: 0, overflow: "auto", marginTo
 const raisedCard: CSSProperties = { background: "#c3c3c3", boxShadow: RAISED };
 
 const EXPERIENCE: [string, string, string][] = [
-  ["May 2026 – now", "Software Engineer · RedAbierta S.A.", "Core technology for fintech and payment processing. Full-time, hybrid."],
+  [
+    "May 2026 – now",
+    "Software Engineer · RedAbierta S.A.",
+    "Built Factured Mobile, one Kotlin Multiplatform app for iOS, Android and Sunmi POS terminals that issues and voids electronic invoices, with inventory, barcode scanning and receipt printing. Also POS payments (ISO 8583) and AI chatbots. Full-time, hybrid.",
+  ],
   ["Jan – May 2026", "Systems Engineering Intern · RedAbierta S.A.", "Go, gRPC, Docker and MCP-based AI tooling."],
   ["Jun 2024 – Jan 2026", "Backend Developer · Cheetah Research AI", "JWT auth and data pipelines for AI chatbot apps, with Django and PostgreSQL. Remote contract."],
   [
@@ -550,7 +554,7 @@ export function AboutBody() {
         />
         <div style={{ display: "flex", flexDirection: "column", gap: 5, minWidth: 0 }}>
           <div style={{ font: font(700, 18, 1.2, MONO) }}>Alberth Alexander Godoy Avila</div>
-          <div style={{ font: font(400, 13, 1.3), color: "#404040" }}>Software Engineer &amp; Backend Developer</div>
+          <div style={{ font: font(400, 13, 1.3), color: "#404040" }}>Full Stack Developer · Mobile &amp; Backend</div>
           <div style={{ font: font(700, 12.5, 1.3) }}>
             Honduras <span style={{ color: "#808080", fontWeight: 400 }}>|</span> UNITEC — Systems Engineering
           </div>
@@ -559,7 +563,8 @@ export function AboutBody() {
       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
         <h3 style={{ margin: 0, font: font(700, 14, 1.3) }}>Right now</h3>
         <p style={{ margin: 0, maxWidth: 620, font: font(400, 13.5, 1.6), textWrap: "pretty" }}>
-          Software Engineer at RedAbierta S.A., working on fintech: POS terminal systems (ISO 8583), React Native apps and AI chatbots. I&apos;m
+          Software Engineer at RedAbierta S.A. I&apos;m building Factured Mobile, an invoicing app that shares one Kotlin Multiplatform codebase
+          across iOS, Android and Sunmi terminals. Before that I worked on POS payments (ISO 8583), React Native apps and AI chatbots. I&apos;m
           also finishing Systems Engineering at UNITEC.
         </p>
       </div>
@@ -761,10 +766,12 @@ Alberth Alexander Godoy Avila (alexvila04)
 Software Engineer @ RedAbierta S.A. · Honduras
 
 WHAT I DO
+- Mobile: Kotlin Multiplatform, Compose,
+  React Native (iOS, Android, Sunmi POS)
 - Payment backends: Go, gRPC, ISO 8583 (POS)
 - Minecraft plugins: Paper, Spigot, Velocity
   (Java, Kotlin)
-- Web & mobile: React, Next.js, React Native
+- Web: React, Next.js, NestJS
 
 START HERE
 - Projects/  -> 3 featured case studies

@@ -133,18 +133,18 @@ export const PROJECTS: Project[] = [
     id: "cross-play-shop",
     name: "Cross-Play Server Shop",
     role: "Client Work",
-    lang: "Python",
-    cats: ["servers"],
+    lang: "Java",
+    cats: ["plugins"],
     featured: true,
     pixel: true,
     image: "/showcase_ultimateshop/shop-01-java.mp4",
     alt: "Market stall shop GUI with shelves, shopkeeper and amount picker in Minecraft",
     line: "A market stall shop GUI with 1,458 items in 26 categories that works the same for Java and Bedrock players.",
-    stack: ["UltimateShop", "Nexo", "Geyser · Scaffolding", "Python", "Pixel Art"],
+    stack: ["Java", "UltimateShop", "Nexo", "Geyser · Scaffolding", "Pixel Art"],
     problem:
       "A survival server needed a shop that looked custom, had prices for every item, and also worked for Bedrock players, who can only tap.",
     solution:
-      "A pixel art stall drawn as Nexo glyphs over UltimateShop chest menus, with shelves aligned to the slot grid and an amount picker (1 to 64, ±1/±10/±64) instead of right-click and keyboard shortcuts. A Python generator builds every category, page and price from a price guide export and skips items the server version doesn't have. Scaffolding converts the pack so Bedrock players get the same backgrounds and icons through Geyser.",
+      "A pixel art stall drawn as Nexo glyphs over UltimateShop chest menus, with shelves aligned to the slot grid and an amount picker (1 to 64, ±1/±10/±64) instead of right-click and keyboard shortcuts. A generator builds every category, page and price from a price guide export and skips items the server version doesn't have. Scaffolding converts the pack so Bedrock players get the same backgrounds and icons through Geyser.",
     result: "One GUI for Java and Bedrock. Prices and categories regenerate from a single JSON file.",
     links: [],
     gallery: [

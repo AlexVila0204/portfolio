@@ -130,6 +130,29 @@ export const PROJECTS: Project[] = [
     ],
   },
   {
+    id: "cross-play-shop",
+    name: "Cross-Play Server Shop",
+    role: "Client Work",
+    lang: "Python",
+    cats: ["servers"],
+    featured: true,
+    pixel: true,
+    image: "/showcase_ultimateshop/shop-01-java.mp4",
+    alt: "Market stall shop GUI with shelves, shopkeeper and amount picker in Minecraft",
+    line: "A market stall shop GUI with 1,458 items in 26 categories that works the same for Java and Bedrock players.",
+    stack: ["UltimateShop", "Nexo", "Geyser · Scaffolding", "Python", "Pixel Art"],
+    problem:
+      "A survival server needed a shop that looked custom, had prices for every item, and also worked for Bedrock players, who can only tap.",
+    solution:
+      "A pixel art stall drawn as Nexo glyphs over UltimateShop chest menus, with shelves aligned to the slot grid and an amount picker (1 to 64, ±1/±10/±64) instead of right-click and keyboard shortcuts. A Python generator builds every category, page and price from a price guide export and skips items the server version doesn't have. Scaffolding converts the pack so Bedrock players get the same backgrounds and icons through Geyser.",
+    result: "One GUI for Java and Bedrock. Prices and categories regenerate from a single JSON file.",
+    links: [],
+    gallery: [
+      { url: "/showcase_ultimateshop/shop-01-java.mp4", title: "Java — Categories, Amount Picker & Buying a Stack" },
+      { url: "/showcase_ultimateshop/shop-02-bedrock.mp4", title: "Bedrock — Same Shop GUI via Geyser & Scaffolding" },
+    ],
+  },
+  {
     id: "hgn-recipediscovery",
     name: "HGN-RecipeDiscovery",
     role: "Client Work",
@@ -314,6 +337,7 @@ export const STACK: Record<StackTab, { label: string; rows: [string, string][] }
     rows: [
       ["Spigot / Paper API", "BoardCraft, Transport-Pipes, RecipeDiscovery, SolrynMC plugins"],
       ["NeoForge / Mods", "Dramaland Casino"],
+      ["Geyser · Nexo · Scaffolding", "Cross-Play Server Shop"],
       ["Kotlin · Java", "All plugins & mods"],
       ["Server optimization", "PvP-Society, EternalMC"],
       ["Velocity", "Minecraft server networks"],

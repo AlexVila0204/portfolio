@@ -140,16 +140,18 @@ export const PROJECTS: Project[] = [
     image: "/showcase_ultimateshop/shop-01-java.mp4",
     alt: "Market stall shop GUI with shelves, shopkeeper and amount picker in Minecraft",
     line: "A market stall shop GUI with 1,458 items in 26 categories that works the same for Java and Bedrock players.",
-    stack: ["Java", "UltimateShop", "Nexo", "Geyser · Scaffolding", "Pixel Art"],
+    stack: ["Java", "Paper API", "UltimateShop", "ExcellentCrates", "Nexo", "Geyser · Scaffolding", "Pixel Art"],
     problem:
       "A survival server needed a shop that looked custom, had prices for every item, and also worked for Bedrock players, who can only tap.",
     solution:
-      "A pixel art stall drawn as Nexo glyphs over UltimateShop chest menus, with shelves aligned to the slot grid and an amount picker (1 to 64, ±1/±10/±64) instead of right-click and keyboard shortcuts. A generator builds every category, page and price from a price guide export and skips items the server version doesn't have. Scaffolding converts the pack so Bedrock players get the same backgrounds and icons through Geyser.",
-    result: "One GUI for Java and Bedrock. Prices and categories regenerate from a single JSON file.",
+      "A pixel art stall drawn as Nexo glyphs over UltimateShop chest menus, with shelves aligned to the slot grid and an amount picker (1 to 64, ±1/±10/±64) instead of right-click and keyboard shortcuts. A generator builds every category, page and price from a price guide export and skips items the server version doesn't have. Scaffolding converts the pack so Bedrock players get the same backgrounds and icons through Geyser. For the Halloween event I wrote Festivia, a Paper plugin that spawns pumpkin heads at admin-set spots around spawn; each one found gives a random reward with confetti, and the rarest is a key for a crate where players choose a piece of a custom armor set. The crates use ExcellentCrates 7 with pixel art menus from the same pack.",
+    result: "One GUI for Java and Bedrock. Prices and categories regenerate from a single JSON file. The event is balanced to run all of November.",
     links: [],
     gallery: [
       { url: "/showcase_ultimateshop/shop-01-java.mp4", title: "Java — Categories, Amount Picker & Buying a Stack" },
       { url: "/showcase_ultimateshop/shop-02-bedrock.mp4", title: "Bedrock — Same Shop GUI via Geyser & Scaffolding" },
+      { url: "/showcase_ultimateshop/halloween-01-gift-hunt.mp4", title: "Gift Hunt — Collecting Pumpkins for Random Rewards" },
+      { url: "/showcase_ultimateshop/halloween-02-crates.mp4", title: "ExcellentCrates — Custom Resource Pack Menus & Set Crate" },
     ],
   },
   {
@@ -337,7 +339,7 @@ export const STACK: Record<StackTab, { label: string; rows: [string, string][] }
     rows: [
       ["Spigot / Paper API", "BoardCraft, Transport-Pipes, RecipeDiscovery, SolrynMC plugins"],
       ["NeoForge / Mods", "Dramaland Casino"],
-      ["Geyser · Nexo · Scaffolding", "Cross-Play Server Shop"],
+      ["Geyser · Nexo · Scaffolding", "Cross-Play Server Shop & Halloween Event"],
       ["Kotlin · Java", "All plugins & mods"],
       ["Server optimization", "PvP-Society, EternalMC"],
       ["Velocity", "Minecraft server networks"],

@@ -140,18 +140,39 @@ export const PROJECTS: Project[] = [
     image: "/showcase_ultimateshop/shop-01-java.mp4",
     alt: "Market stall shop GUI with shelves, shopkeeper and amount picker in Minecraft",
     line: "A market stall shop GUI with 1,458 items in 26 categories that works the same for Java and Bedrock players.",
-    stack: ["Java", "Paper API", "UltimateShop", "ExcellentCrates", "Nexo", "Geyser · Scaffolding", "Pixel Art"],
+    stack: ["Java", "UltimateShop", "Nexo", "Geyser · Scaffolding", "Pixel Art"],
     problem:
       "A survival server needed a shop that looked custom, had prices for every item, and also worked for Bedrock players, who can only tap.",
     solution:
-      "A pixel art stall drawn as Nexo glyphs over UltimateShop chest menus, with shelves aligned to the slot grid and an amount picker (1 to 64, ±1/±10/±64) instead of right-click and keyboard shortcuts. A generator builds every category, page and price from a price guide export and skips items the server version doesn't have. Scaffolding converts the pack so Bedrock players get the same backgrounds and icons through Geyser. For the Halloween event I wrote Festivia, a Paper plugin that spawns pumpkin heads at admin-set spots around spawn; each one found gives a random reward with confetti, and the rarest is a key for a crate where players choose a piece of a custom armor set. The crates use ExcellentCrates 7 with pixel art menus from the same pack.",
-    result: "One GUI for Java and Bedrock. Prices and categories regenerate from a single JSON file. The event is balanced to run all of November.",
+      "A pixel art stall drawn as Nexo glyphs over UltimateShop chest menus, with shelves aligned to the slot grid and an amount picker (1 to 64, ±1/±10/±64) instead of right-click and keyboard shortcuts. A generator builds every category, page and price from a price guide export and skips items the server version doesn't have. Scaffolding converts the pack so Bedrock players get the same backgrounds and icons through Geyser.",
+    result: "One GUI for Java and Bedrock. Prices and categories regenerate from a single JSON file.",
     links: [],
     gallery: [
       { url: "/showcase_ultimateshop/shop-01-java.mp4", title: "Java — Categories, Amount Picker & Buying a Stack" },
       { url: "/showcase_ultimateshop/shop-02-bedrock.mp4", title: "Bedrock — Same Shop GUI via Geyser & Scaffolding" },
-      { url: "/showcase_ultimateshop/halloween-01-gift-hunt.mp4", title: "Gift Hunt — Collecting Pumpkins for Random Rewards" },
-      { url: "/showcase_ultimateshop/halloween-02-crates.mp4", title: "ExcellentCrates — Custom Resource Pack Menus & Set Crate" },
+    ],
+  },
+  {
+    id: "festivia-halloween",
+    name: "Festivia Halloween Event",
+    role: "Client Work",
+    lang: "Java",
+    cats: ["plugins"],
+    featured: true,
+    pixel: true,
+    image: "/showcase_festivia/gift-hunt-01-pumpkins.mp4",
+    alt: "Players collecting pumpkin heads around spawn with confetti and rewards in Minecraft",
+    line: "A month-long Halloween gift hunt: pumpkin heads spawn around spawn and each one gives a random reward.",
+    stack: ["Java", "Paper API", "ExcellentCrates", "Nexo", "Geyser · Scaffolding", "Pixel Art"],
+    problem:
+      "A survival server wanted a Halloween event that kept players coming back all of November, with a custom armor set as the top prize.",
+    solution:
+      "Festivia is a Paper plugin I wrote: admins place spots with a wand, and every interval it spawns a random number of pumpkin heads that scales with players online. Each pumpkin found gives a weighted random reward with confetti and a witch laugh; the rarest is a key for a crate where players choose a piece of the custom armor set. The crates run on ExcellentCrates 7 with pixel art menus drawn as Nexo glyphs, converted for Bedrock with Scaffolding. Messages come from language files (English and Spanish).",
+    result: "Rewards, spawn rates and textures live in config. Balanced so dedicated players can finish the set within the month.",
+    links: [],
+    gallery: [
+      { url: "/showcase_festivia/gift-hunt-01-pumpkins.mp4", title: "Gift Hunt — Collecting Pumpkins for Random Rewards" },
+      { url: "/showcase_festivia/crates-01-menus.mp4", title: "ExcellentCrates — Custom Resource Pack Menus & Set Crate" },
     ],
   },
   {
@@ -337,9 +358,9 @@ export const STACK: Record<StackTab, { label: string; rows: [string, string][] }
   minecraft: {
     label: "Minecraft",
     rows: [
-      ["Spigot / Paper API", "BoardCraft, Transport-Pipes, RecipeDiscovery, SolrynMC plugins"],
+      ["Spigot / Paper API", "BoardCraft, Festivia, Transport-Pipes, RecipeDiscovery, SolrynMC plugins"],
       ["NeoForge / Mods", "Dramaland Casino"],
-      ["Geyser · Nexo · Scaffolding", "Cross-Play Server Shop & Halloween Event"],
+      ["Geyser · Nexo · Scaffolding", "Cross-Play Server Shop, Festivia"],
       ["Kotlin · Java", "All plugins & mods"],
       ["Server optimization", "PvP-Society, EternalMC"],
       ["Velocity", "Minecraft server networks"],
